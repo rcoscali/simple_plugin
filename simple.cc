@@ -3,6 +3,9 @@
 #define simple_realloc(p, x)  realloc((p), (x))
 #define simple_free(x)        free((x))
 
+#define GRAPHNAME_ARG 	      "graphname"
+#define GRAPHNAME_ARG_LEN     9
+
 #include <stdio.h>
 #include <iostream>
 
@@ -32,17 +35,33 @@
 #include "cfghooks.h"
 #include "graph.h"
 
+using namespace std;
+
 int plugin_is_GPL_compatible = 1;
 
+struct plugin_info simple_plugin_info
+{
+  .version = "0.0.1",
+  .help = "A simple plugin ..."
+};
+
+/* ==========================================================
+ * The simple plugin class
+ */
 class simple_plugin_t
 {
 public:
-  simple_plugin_t(struct plugin_name_args *);
+  simple_plugin_t(struct plugin_name_args *,
+                  struct plugin_gcc_version *);
   virtual ~simple_plugin_t(void);
 
   bool has_arg(const char *);  
   const char *get_graphname(void);
-  bool check_version(struct plugin_gcc_version *);
+  bool check_version(void);
+  void dump_plugin_info(void);
+  void dump_version_info(void);
+
+  int m_argc;
 
 protected:
   simple_plugin_t(void);
@@ -51,47 +70,54 @@ protected:
   simple_plugin_t *clone(simple_plugin_t *);
 
 private:
-  std::string m_base_name;
-  std::string m_full_name;
-  int m_argc;
+  string m_base_name;
+  string m_full_name;
   struct plugin_argument *m_argv;
-  std::string m_version;
-  std::string m_help;
-  std::string m_graphname;
+  string m_version;
+  string m_help;
+  string m_graphname;
+  struct plugin_gcc_version *m_version_infos;
+  struct plugin_info *m_plugin_infos;
 };
 
-struct plugin_info simple_plugin_info
-{
-  .version = "0.0.1",
-  .help = "A simple plugin ..."
-};
-
+/* ==========================================================
+ * A custom pass class
+ */
 class SimpleGimplePass : public gimple_opt_pass
 {
 public:
-  SimpleGimplePass(const pass_data& data, gcc::context *ctxt) :
-    gimple_opt_pass(data, ctxt)
-  {
-  }
+  SimpleGimplePass(const pass_data&, gcc::context *);
 
-  bool gate (function *fun)
-  {
-    return true;
-  }
-  
-  unsigned int execute (function *fun)
-  {
-    return 0;
-  }
-
-  opt_pass *clone()
-  {
-    return this;
-  }
+  bool gate (function *);
+  unsigned int execute (function *);
+  opt_pass *clone(void);
 };
 
+SimpleGimplePass::SimpleGimplePass(const pass_data& data,
+                                   gcc::context *ctxt)
+  : gimple_opt_pass(data, ctxt)
+{
+}
 
-/*
+bool
+SimpleGimplePass::gate(function *fun)
+{
+  return true;
+}
+
+unsigned int
+SimpleGimplePass::execute(function *fun)
+{
+  return 0;
+}
+
+opt_pass *
+SimpleGimplePass::clone()
+{
+  return this;
+}
+
+/* ==========================================================
  * Context print macro
  */
 
@@ -100,79 +126,111 @@ public:
 //#define DUMP_ALL
 
 #if DUMP_ALL
-#define print_context \
-  printf("cfun = %p\n", cfun); \
-  if (cfun) {\
-    printf("cfun->decl = %p\n", cfun->decl);\
-    if (cfun->decl) {                                      \
-      print_generic_decl(stdout, cfun->decl, 0xFFFFFFFF);  \
-      printf("\n"); \
-    }\
-    printf("cfun->gimple_body = %p\n", cfun->gimple_body);\
-    if (cfun->gimple_body) {\
-      print_gimple_seq(stdout, cfun->gimple_body, 4, 0xFFFFFFFF);\
-      printf("\n");\
-    };\
-    printf("cfun->cfg = %p\n", cfun->cfg);      \
-    if (cfun->cfg) \
-    {\
-      basic_block bb;\
-      gimple_dump_cfg(stdout, 0xFFFFFFFF);       \
-      FOR_ALL_BB_FN(bb, cfun)                    \
-        dump_bb (stdout, bb, 4, 0xFFFFFFFF);     \
-    } \
+
+static int simple_dump_flags = 0xFFFFFFFF;
+
+# define print_context                                                \
+  printf("cfun = %p\n", cfun);                                        \
+  if (cfun) {                                                         \
+    printf("cfun->decl = %p\n", cfun->decl);                          \
+    if (cfun->decl) {                                                 \
+      print_generic_decl(stdout, cfun->decl, 0xFFFFFFFF);             \
+      printf("\n");                                                   \
+    }                                                                 \
+    printf("cfun->gimple_body = %p\n", cfun->gimple_body);            \
+    if (cfun->gimple_body) {                                          \
+      print_gimple_seq(stdout, cfun->gimple_body, 4, 0xFFFFFFFF);     \
+      printf("\n");                                                   \
+    };                                                                \
+    printf("cfun->cfg = %p\n", cfun->cfg);                            \
+    if (cfun->cfg)                                                    \
+    {                                                                 \
+      basic_block bb;                                                 \
+      gimple_dump_cfg(stdout, 0xFFFFFFFF);                            \
+      FOR_ALL_BB_FN(bb, cfun)                                         \
+        dump_bb (stdout, bb, 4, 0xFFFFFFFF);                          \
+    }                                                                 \
   }
-#else
-#define print_context \
-  printf("cfun = %p\n", cfun); \
-  if (cfun) {\
-    printf("cfun->decl = %p\n", cfun->decl);\
-    if (cfun->decl) {                                      \
-      print_generic_decl(stdout, cfun->decl, 0);  \
-      printf("\n"); \
-    }\
-    printf("cfun->cfg = %p\n", cfun->cfg);      \
-    if (cfun->cfg) \
-    {\
-      basic_block bb;\
-      printf("*** BASIC BLOCKS ***\n");      \
-      FOR_ALL_BB_FN(bb, cfun)                    \
-        {\
-          printf("*** ========================");\
-          dump_bb (stdout, bb, 4, 0xFFFFFFFF);  \
-        }\
-      if (pi->has_arg("graphname")) \
-        print_graph_cfg(pi->get_graphname(), cfun);     \
-    } \
-  }
-#endif
+
+#else /* ! DUMP_ALL */
 
 /*
+static int simple_dump_flags = dump_flags;
+*/
+
+
+static int simple_dump_flags =                                        \
+  TDF_BLOCKS|                                                         \
+  TDF_LINENO|                                                         \
+  TDF_COMMENT;
+
+//  TDF_ASMNAME|                                                      
+//  TDF_STMTADDR|                                                      
+//  TDF_ADDRESS;
+
+
+/*static int simple_dump_flags =                                      \
+  TDF_BLOCKS|TDF_LINENO|TDF_COMMENT|                                  \
+  TDF_RAW|TDF_ALIAS|TDF_EH|TDF_SLIM|                                  \
+  TDF_STMTADDR|TDF_VOPS|TDF_MEMSYMS|                                  \
+  TDF_UID|TDF_ASMNAME|TDF_ADDRESS;
+*/
+
+# define print_context                                                \
+  printf("cfun = %p\n", cfun);                                        \
+  if (cfun) {                                                         \
+    printf("cfun->decl = %p\n", cfun->decl);                          \
+    if (cfun->decl) {                                                 \
+      print_generic_decl(stdout, cfun->decl, 0);                      \
+      printf("\n");                                                   \
+    }                                                                 \
+    printf("cfun->cfg = %p\n", cfun->cfg);                            \
+    if (cfun->cfg)                                                    \
+    {                                                                 \
+      basic_block bb;                                                 \
+      printf("*** BASIC BLOCKS ***\n");                               \
+      FOR_ALL_BB_FN(bb, cfun)                                         \
+        {                                                             \
+          printf("*** ========================\n");                   \
+          dump_bb (stdout, bb, 4, simple_dump_flags);                 \
+        }                                                             \
+      if (pi->has_arg(GRAPHNAME_ARG))                                 \
+        print_graph_cfg(pi->get_graphname(), cfun);                   \
+    }                                                                 \
+  }
+
+#endif /* DUMP_ALL */
+
+/* ==========================================================
  * Callbacks
  */
 
+// on_PLUGIN_FINISH
+//
 // gcc_data is NULL;
 void
-on_plugin_finish(void *gcc_data, void *user_data)
+on_PLUGIN_FINISH(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin finished" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple on_PLUGIN_FINISH" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
   print_context;
 }
 
-// gcc_data is opt_pass *
+// on_PLUGIN_PASS_EXECUTION
+//
+// gcc_data is the executed pass pointer: opt_pass *
 void
-on_plugin_pass_execution(void *gcc_data, void *user_data)
+on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin pass execution" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple on_PLUGIN_PASS_EXECUTION" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
@@ -187,14 +245,16 @@ on_plugin_pass_execution(void *gcc_data, void *user_data)
     }
 }
 
-// gcc_data is opt_pass *
+// on_PLUGIN_NEW_PASS
+//
+// gcc_data is the first executed pass pointer: opt_pass *
 void
-on_plugin_new_pass(void *gcc_data, void *user_data)
+on_PLUGIN_NEW_PASS(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin new pass" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple PLUGIN_NEW_PASS" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
@@ -205,97 +265,111 @@ on_plugin_new_pass(void *gcc_data, void *user_data)
   print_context;
 }
 
+// on_PLUGIN_FINISH_UNIT
+//
 // gcc_data is NULL
 void
-on_plugin_finish_unit(void *gcc_data, void *user_data)
+on_PLUGIN_FINISH_UNIT(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin finished unit" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple plugin finished unit" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
   print_context;
 }
 
+// on_PLUGIN_ALL_PASSES_START
+//
 // gcc_data is NULL
 void
-on_plugin_plugin_all_passes_start(void *gcc_data, void *user_data)
+on_PLUGIN_ALL_PASSES_START(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin PLUGIN_ALL_PASSES_START" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple PLUGIN_ALL_PASSES_START" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
   print_context;
 }
 
+// on_PLUGIN_ALL_PASSES_END
+//
 // gcc_data is NULL
 void
-on_plugin_plugin_all_passes_end(void *gcc_data, void *user_data)
+on_PLUGIN_ALL_PASSES_END(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin PLUGIN_ALL_PASSES_END" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple PLUGIN_ALL_PASSES_END" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
   print_context;
 }
 
+// on_PLUGIN_ALL_IPA_PASSES_START
+//
 // gcc_data is NULL
 void
-on_plugin_plugin_plugin_all_ipa_passes_start(void *gcc_data, void *user_data)
+on_PLUGIN_ALL_IPA_PASSES_START(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin PLUGIN_ALL_IPA_PASSES_START" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple PLUGIN_ALL_IPA_PASSES_START" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
 
   print_context;
 }
 
+// on_PLUGIN_ALL_IPA_PASSES_END
+//
 // gcc_data is NULL
 void
-on_plugin_plugin_plugin_all_ipa_passes_end(void *gcc_data, void *user_data)
+on_PLUGIN_ALL_IPA_PASSES_END(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cerr << "Simple plugin PLUGIN_ALL_IPA_PASSES_END" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cerr << "Simple PLUGIN_ALL_IPA_PASSES_END" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
-
+  
   print_context;
 }
 
+// trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END
+// 
 // gcc_data is NULL
 static void
 trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END(void *gcc_data, void *user_data)
 {
-  std::cerr << "============================" << std::endl;
-  std::cout << "PLUGIN_EARLY_GIMPLE_PASSES_END" << std::endl;
-  std::cout << "    gcc_data = " << gcc_data << std::endl;
-  std::cout << "   user_data = " << user_data << std::endl;
+  cerr << "============================" << endl;
+  cout << "Simple custom PLUGIN_EARLY_GIMPLE_PASSES_END" << endl;
+  cout << "    gcc_data = " << gcc_data << endl;
+  cout << "   user_data = " << user_data << endl;
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
-
+  
   print_context;
 }
 
 /*
  * simple_plugin_t implem
  */
-
-simple_plugin_t::simple_plugin_t(struct plugin_name_args *args)
+ 
+// Constructor
+simple_plugin_t::simple_plugin_t(struct plugin_name_args *args,
+                                 struct plugin_gcc_version *version_infos)
 {
-  std::cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): entry" << std::endl;
+  cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): entry" << endl;
 
   m_graphname = "";
   m_base_name = args->base_name != NULL ? args->base_name : "";
@@ -313,25 +387,38 @@ simple_plugin_t::simple_plugin_t(struct plugin_name_args *args)
       m_argv[i].value = (char *)simple_malloc(strlen(args->argv[i].value));
       assert(m_argv[i].value != (char *)NULL);
       memcpy(m_argv[i].value, args->argv[i].value, strlen(args->argv[i].value)+1);
-
-      if (!strncmp(args->argv[i].key, "graphname", 9))
+      
+      if (!strncmp(args->argv[i].key, GRAPHNAME_ARG, GRAPHNAME_ARG_LEN))
         m_graphname = args->argv[i].value;
     }
 
-  m_version = args->version ? args->version : "";
-  m_help = args->help ? args->help : "";
+  m_version = simple_plugin_info.version ? simple_plugin_info.version : "";
+  cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): m_version = '" << m_version << "'" << endl;
+  m_help = simple_plugin_info.help ? simple_plugin_info.help : "";
+  cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): m_help = '" << m_help << "'" << endl;
 
-  std::cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): exit" << std::endl << std::endl;
+  m_version_infos = version_infos;
+  m_plugin_infos = &simple_plugin_info;
+  
+  cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): exit" << endl << endl;
 }
-
+ 
+ 
 simple_plugin_t::~simple_plugin_t()
 {
-  std::cout << "simple_plugin_t::~simple_plugin_t(): entry" << std::endl;
+  cout << "simple_plugin_t::~simple_plugin_t(): entry" << endl;
 
-  //  if (m_argv)
-  //free((void *)m_argv);
+  for (int i = 0; i < m_argc; i++)
+    {
+      if (m_argv[i].key)
+        simple_free((void *)m_argv[i].key);
+      if (m_argv[i].value)
+        simple_free((void *)m_argv[i].value);
+    }
+  if (m_argv)
+    simple_free((void *)m_argv);
 
-  std::cout << "simple_plugin_t::~simple_plugin_t(): exit" << std::endl;
+  cout << "simple_plugin_t::~simple_plugin_t(): exit" << endl;
 }
 
 bool
@@ -339,43 +426,58 @@ simple_plugin_t::has_arg(const char *key)
 {
   bool ret = false;
 
-  std::cout << "bool simple_plugin_t::has_arg(const char *key): entry" << std::endl;
+  cout << "bool simple_plugin_t::has_arg(const char *key): entry" << endl;
+
   for (int i = 0 ; i < m_argc; i++)
-    {
-      if (!strncmp(m_argv[i].key, key, strlen(m_argv[i].key)))
-        {
-          ret = true;
-          break;
-        }
-    }
-  std::cout << "bool simple_plugin_t::has_arg(const char *key): exit [" << (ret ? "true" : "false") << "]" << std::endl;
+    if (!strncmp(m_argv[i].key, key, strlen(m_argv[i].key)))
+      {
+        ret = true;
+        break;
+      }
+
+  cout << "bool simple_plugin_t::has_arg(const char *key): exit [" << (ret ? "true" : "false") << "]" << endl;
   return ret;
 }
 
 const char *
 simple_plugin_t::get_graphname(void)
 {
-  std::cout <<  "const char *simple_plugin_t::get_graphname(void): entry" << std::endl;
-  std::cout <<  "const char *simple_plugin_t::get_graphname(void): m_graphname = " << m_graphname << std::endl;
-  std::cout <<  "const char *simple_plugin_t::get_graphname(void): exit" << std::endl;
   return m_graphname.c_str();
 }
 
 bool
-simple_plugin_t::check_version(struct plugin_gcc_version *version)
+simple_plugin_t::check_version()
 {
+  if (!m_version_infos)
+    return false;
+  if (!plugin_default_version_check (m_version_infos, &gcc_version))
+    {
+      cerr << "This GCC plugin is for version "
+           << GCCPLUGIN_VERSION_MAJOR
+           << "."
+           << GCCPLUGIN_VERSION_MINOR << "\n";
+      return false;
+    }
+  return true;
 }
 
 simple_plugin_t::simple_plugin_t()
 {
-  std::cout << "simple_plugin_t::simple_plugin_t(): entry" << std::endl;
-  std::cout << "simple_plugin_t::simple_plugin_t(): exit" << std::endl;
+  cout << "simple_plugin_t::simple_plugin_t(): entry" << endl;
+
+  m_version = simple_plugin_info.version ? simple_plugin_info.version : "";
+  m_help = simple_plugin_info.help ? simple_plugin_info.help : "";
+
+  m_version_infos = NULL;
+  m_plugin_infos = &simple_plugin_info;
+
+  cout << "simple_plugin_t::simple_plugin_t(): exit" << endl;
 }
 
 simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin)
 {
-  std::cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): entry" << std::endl;
-  std::cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): copy of plugin " << plugin.m_base_name << std::endl;
+  cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): entry" << endl;
+  cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): copy of plugin " << plugin.m_base_name << endl;
 
   m_base_name = plugin.m_base_name != (char *)NULL ? plugin.m_base_name : "";
   m_full_name = plugin.m_full_name != (char *)NULL ? plugin.m_full_name : "";
@@ -392,19 +494,23 @@ simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin)
       assert(m_argv[i].value != (char *)NULL);
       memcpy(m_argv[i].value, plugin.m_argv[i].value, strlen(plugin.m_argv[i].value)+1);
 
-      if (!strncmp(plugin.m_argv[i].key, "graphname", 9))
+      if (!strncmp(plugin.m_argv[i].key, GRAPHNAME_ARG, GRAPHNAME_ARG_LEN))
         m_graphname = plugin.m_argv[i].value;
     }
-  m_version = plugin.m_version != (char *)NULL ? plugin.m_version : "";
-  m_help = plugin.m_help != (char *)NULL ? plugin.m_help : "";
+
+  m_version = plugin.m_version;
+  m_help = plugin.m_help;
+
+  m_version_infos = plugin.m_version_infos;
+  m_plugin_infos = plugin.m_plugin_infos;
   
-  std::cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): exit" << std::endl;
+  cout << "simple_plugin_t::simple_plugin_t(simple_plugin_t &plugin): exit" << endl;
 }
 
 simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin)
 {
-  std::cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): entry" << std::endl;
-  std::cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): assign of plugin " << plugin.m_base_name << std::endl;
+  cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): entry" << endl;
+  cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): assign of plugin " << plugin.m_base_name << endl;
 
   m_base_name = plugin.m_base_name != (char *)NULL ? plugin.m_base_name : "";
   m_full_name = plugin.m_full_name != (char *)NULL ? plugin.m_full_name : "";
@@ -421,20 +527,23 @@ simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin)
       assert(m_argv[i].value != (char *)NULL);
       memcpy(m_argv[i].value, plugin.m_argv[i].value, strlen(plugin.m_argv[i].value)+1);
 
-      if (!strncmp(plugin.m_argv[i].key, "graphname", 9))
+      if (!strncmp(plugin.m_argv[i].key, GRAPHNAME_ARG, GRAPHNAME_ARG_LEN))
         m_graphname = plugin.m_argv[i].value;
     }
-  m_version = plugin.m_version != (char *)NULL ? plugin.m_version : "";
-  m_help = plugin.m_help != (char *)NULL ? plugin.m_help : "";
+  m_version = plugin.m_version;
+  m_help = plugin.m_help;
   
-  std::cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): exit" << std::endl;
+  m_version_infos = plugin.m_version_infos;
+  m_plugin_infos = plugin.m_plugin_infos;
+  
+  cout << "simple_plugin_t& simple_plugin_t::operator =(simple_plugin_t &plugin): exit" << endl;
   return *this;
 }
 
 simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr)
 {
-  std::cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): entry" << std::endl;
-  std::cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): assign of plugin " << plugin_ptr->m_base_name << std::endl;
+  cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): entry" << endl;
+  cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): assign of plugin " << plugin_ptr->m_base_name << endl;
 
   m_base_name = plugin_ptr->m_base_name != (char *)NULL ? plugin_ptr->m_base_name : "";
   m_full_name = plugin_ptr->m_full_name != (char *)NULL ? plugin_ptr->m_full_name : "";
@@ -452,24 +561,63 @@ simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr)
       assert(m_argv[i].value != (char *)NULL);
       memcpy(m_argv[i].value, plugin_ptr->m_argv[i].value, strlen(plugin_ptr->m_argv[i].value)+1);
 
-      if (!strncmp(plugin_ptr->m_argv[i].key, "graphname", 9))
+      if (!strncmp(plugin_ptr->m_argv[i].key, GRAPHNAME_ARG, GRAPHNAME_ARG_LEN))
         m_graphname = plugin_ptr->m_argv[i].value;
     }
   m_version = plugin_ptr->m_version != (char *)NULL ? plugin_ptr->m_version : "";
   m_help = plugin_ptr->m_help != (char *)NULL ? plugin_ptr->m_help : "";
   
-  std::cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): exit" << std::endl;
+  m_version_infos = plugin_ptr->m_version_infos;
+  m_plugin_infos = plugin_ptr->m_plugin_infos;
+  
+  cout << "simple_plugin_t *simple_plugin_t::clone(simple_plugin_t *plugin_ptr): exit" << endl;
   return this;
 }
 
-static int SimpleGimplePass_do_init(struct plugin_name_args *plugin_info,
-                                    enum opt_pass_type pass_type,
-                                    size_t pass_sz)
+void
+simple_plugin_t::dump_plugin_info(void)
+{
+  cerr << "Plugin info" << endl;
+  cerr << "===========" << endl << endl;
+  cerr << "Base name: " << m_base_name << endl;
+  cerr << "Full name: " << m_full_name << endl;
+  cerr << "Arguments #:" << m_argc << endl;
+
+  for (int i = 0; i < m_argc; i++)
+    {
+      cerr << "#" << i << " ARGS[" << m_argv[i].key << "] = '" << m_argv[i].value << "'" << endl; 
+    }
+
+  cerr << "Version string: " << m_version << endl;
+  cerr << "Help string: " << m_help << endl;  
+}
+
+void
+simple_plugin_t::dump_version_info(void)
+{
+  cerr << endl;
+  cerr << "Version info\n";
+  cerr << "============\n\n";
+  cerr << "Base version: " << m_version_infos->basever << endl;
+  cerr << "Date stamp: " << m_version_infos->datestamp << endl;
+  cerr << "Dev phase: " << m_version_infos->devphase << endl;
+  cerr << "Revision: " << m_version_infos->devphase << endl;
+  cerr << "Configuration arguments: " << m_version_infos->configuration_arguments << endl;
+  cerr << endl;
+}  
+
+/*
+ * Register a new custom GIMPLE pass
+ */
+static int
+SimpleGimplePass_do_init(struct plugin_name_args *plugin_info,
+                         enum opt_pass_type pass_type,
+                         size_t pass_sz)
 {
   pass_data pass_data;
   struct opt_pass *pass;
 
-  std::cerr << "SimpleGimplePass_do_init: entry" << std::endl;
+  cerr << "SimpleGimplePass_do_init: entry" << endl;
   
   memset(&pass_data, 0, sizeof(pass_data));
 
@@ -481,12 +629,12 @@ static int SimpleGimplePass_do_init(struct plugin_name_args *plugin_info,
   pass_data.has_execute = true;
 #endif
 
-  std::cerr << "SimpleGimplePass_do_init: pass_data.name = " << pass_data.name << std::endl;
+  cerr << "SimpleGimplePass_do_init: pass_data.name = " << pass_data.name << endl;
   
   switch (pass_type)
     {
     case GIMPLE_PASS:
-      std::cerr << "SimpleGimplePass_do_init: pass_type = GIMPLE_PASS " << std::endl;
+      cerr << "SimpleGimplePass_do_init: pass_type = GIMPLE_PASS " << endl;
       pass = new SimpleGimplePass(pass_data, g);
       break;
       
@@ -501,93 +649,88 @@ static int SimpleGimplePass_do_init(struct plugin_name_args *plugin_info,
   rpinfo.ref_pass_instance_number = 0;
   rpinfo.reference_pass_name = "gimple";
   
-  std::cerr << "Registering callback ... " << pass_data.name << std::endl;
+  cerr << "Registering callback ... " << pass_data.name << endl;
   
-  register_callback (plugin_info->base_name, PLUGIN_EARLY_GIMPLE_PASSES_END,
-                     trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END, NULL);
+  register_callback (plugin_info->base_name,
+                     PLUGIN_EARLY_GIMPLE_PASSES_END,
+                     trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END,
+                     NULL);
 
   return 0;
 }
 
-int plugin_init (struct plugin_name_args *plugin_info,
-                 struct plugin_gcc_version *version)
+
+/*
+ * Plugin init function
+ *
+ * This is the first symbol loaded and called after loading the shared library
+ */
+int
+plugin_init (struct plugin_name_args *plugin_info,
+             struct plugin_gcc_version *version)
 {
-  simple_plugin_t *plugin_instance = new simple_plugin_t(plugin_info);
+  /* Create plugin instance */
+  simple_plugin_t *plugin_instance = new simple_plugin_t(plugin_info, version);
   assert(plugin_instance != (simple_plugin_t *)NULL);
-  
-  if (!plugin_default_version_check (version, &gcc_version))
-    {
-      std::cerr << "This GCC plugin is for version " << GCCPLUGIN_VERSION_MAJOR
-                << "." << GCCPLUGIN_VERSION_MINOR << "\n";
-      return 1;
-    }
 
-  std::cerr << "Plugin info\n";
-  std::cerr << "===========\n\n";
-  std::cerr << "Base name: " << plugin_info->base_name << "\n";
-  std::cerr << "Full name: " << plugin_info->full_name << "\n";
-  std::cerr << "Number of arguments of this plugin:" << plugin_info->
-    argc << "\n";
+  /* Check that version matches */
+  if (!plugin_instance->check_version ())
+    return 1;
 
-  for (int i = 0; i < plugin_info->argc; i++)
-    {
-      std::cerr << "Argument " << i << ": Key: " << plugin_info->argv[i].
-	key << ". Value: " << plugin_info->argv[i].value << "\n";
- 
-    }
+  /* Dump some infos */
+  plugin_instance->dump_plugin_info();
+  plugin_instance->dump_version_info();
 
-  if (plugin_info->version != (char *)NULL)
-    std::cerr << "Version string of the plugin: " << plugin_info->
-      version << "\n";
-  if (plugin_info->help != (char *)NULL)
-    std::cerr << "Help string of the plugin: " << plugin_info->help << "\n";
-  
-  std::cerr << "\n";
-  std::cerr << "Version info\n";
-  std::cerr << "============\n\n";
-  std::cerr << "Base version: " << version->basever << "\n";
-  std::cerr << "Date stamp: " << version->datestamp << "\n";
-  std::cerr << "Dev phase: " << version->devphase << "\n";
-  std::cerr << "Revision: " << version->devphase << "\n";
-  std::cerr << "Configuration arguments: " << version->
-    configuration_arguments << "\n";
-  std::cerr << "\n";
-  
+  /* */
   SimpleGimplePass_do_init(plugin_info, GIMPLE_PASS, sizeof(struct gimple_opt_pass));
 
+#define DEFEVENT(NAME)                                                \
+  /* Register at info for the plugin: */                              \
+  register_callback(plugin_info->base_name, NAME,                     \
+                    on_##NAME, (void *)plugin_instance)
+
+  DEFEVENT(PLUGIN_PASS_EXECUTION);
   /* Register at info for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_PASS_EXECUTION,
-                    on_plugin_pass_execution, (void *)plugin_instance);
-  
+  //  register_callback(plugin_info->base_name, PLUGIN_PASS_EXECUTION,
+  //                    on_PLUGIN_PASS_EXECUTION, (void *)plugin_instance);
+
+  DEFEVENT(PLUGIN_NEW_PASS);
   /* Register at info for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_NEW_PASS,
-                    on_plugin_new_pass, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_NEW_PASS,
+  //                    on_PLUGIN_NEW_PASS, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_FINISH);
   /* Register at-exit finalization for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_FINISH,
-                    on_plugin_finish, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_FINISH,
+  //                    on_PLUGIN_FINISH, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_ALL_PASSES_START);
   /* Register before first pass from all_passes  for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_ALL_PASSES_START,
-                    on_plugin_plugin_all_passes_start, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_ALL_PASSES_START,
+  //                    on_PLUGIN_ALL_PASSES_START, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_ALL_PASSES_END);
   /* Register after last pass from all_passes for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_ALL_PASSES_END,
-                    on_plugin_plugin_all_passes_end, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_ALL_PASSES_END,
+  //                    on_PLUGIN_ALL_PASSES_END, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_ALL_IPA_PASSES_START);
   /* Register before first ipa pass  for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_ALL_IPA_PASSES_START,
-                    on_plugin_plugin_plugin_all_ipa_passes_start, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_ALL_IPA_PASSES_START,
+  //                    on_PLUGIN_ALL_IPA_PASSES_START, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_ALL_IPA_PASSES_END);
   /* Register after last ipa pass for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_ALL_IPA_PASSES_END,
-                    on_plugin_plugin_plugin_all_ipa_passes_end, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_ALL_IPA_PASSES_END,
+  //                    on_PLUGIN_ALL_IPA_PASSES_END, (void *)plugin_instance);
   
+  DEFEVENT(PLUGIN_FINISH_UNIT);
   /* Register at-exit finalization for the plugin: */
-  register_callback(plugin_info->base_name, PLUGIN_FINISH_UNIT,
-                    on_plugin_finish_unit, (void *)plugin_instance);
+  //  register_callback(plugin_info->base_name, PLUGIN_FINISH_UNIT,
+  //                    on_PLUGIN_FINISH_UNIT, (void *)plugin_instance);
+#undef DEFEVENT
   
-  std::cerr << "Plugin successfully initialized\n";
+  cerr << "Plugin successfully initialized\n";
   
   return 0;  
 }
