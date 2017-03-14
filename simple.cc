@@ -40,9 +40,9 @@ public:
   simple_plugin_t(struct plugin_name_args *);
   virtual ~simple_plugin_t(void);
 
-  bool has_arg(const char *key);
-  
+  bool has_arg(const char *);  
   const char *get_graphname(void);
+  bool check_version(struct plugin_gcc_version *);
 
 protected:
   simple_plugin_t(void);
@@ -90,6 +90,13 @@ public:
   }
 };
 
+
+/*
+ * Context print macro
+ */
+
+// For dumping everything define DUMP_ALL
+// Warning: HUGE !!
 //#define DUMP_ALL
 
 #if DUMP_ALL
@@ -139,6 +146,10 @@ public:
     } \
   }
 #endif
+
+/*
+ * Callbacks
+ */
 
 // gcc_data is NULL;
 void
@@ -278,6 +289,10 @@ trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END(void *gcc_data, void *user_dat
   print_context;
 }
 
+/*
+ * simple_plugin_t implem
+ */
+
 simple_plugin_t::simple_plugin_t(struct plugin_name_args *args)
 {
   std::cout << "simple_plugin_t::simple_plugin_t(struct plugin_name_args *args): entry" << std::endl;
@@ -344,6 +359,11 @@ simple_plugin_t::get_graphname(void)
   std::cout <<  "const char *simple_plugin_t::get_graphname(void): m_graphname = " << m_graphname << std::endl;
   std::cout <<  "const char *simple_plugin_t::get_graphname(void): exit" << std::endl;
   return m_graphname.c_str();
+}
+
+bool
+simple_plugin_t::check_version(struct plugin_gcc_version *version)
+{
 }
 
 simple_plugin_t::simple_plugin_t()
@@ -533,11 +553,8 @@ int plugin_init (struct plugin_name_args *plugin_info,
     configuration_arguments << "\n";
   std::cerr << "\n";
   
-  /* Register at info for the plugin: */
-  //  register_callback(plugin_info->base_name, PLUGIN_INFO,
-  //                NULL, (void *)simple_plugin_info);
+  SimpleGimplePass_do_init(plugin_info, GIMPLE_PASS, sizeof(struct gimple_opt_pass));
 
-  
   /* Register at info for the plugin: */
   register_callback(plugin_info->base_name, PLUGIN_PASS_EXECUTION,
                     on_plugin_pass_execution, (void *)plugin_instance);
@@ -567,15 +584,9 @@ int plugin_init (struct plugin_name_args *plugin_info,
                     on_plugin_plugin_plugin_all_ipa_passes_end, (void *)plugin_instance);
   
   /* Register at-exit finalization for the plugin: */
-  //  register_callback(plugin_info->base_name, PLUGIN_FINISH_PARSE_FUNCTION,
-  //                    on_plugin_finish_parse_function, (void *)plugin_instance);
-  
-  /* Register at-exit finalization for the plugin: */
   register_callback(plugin_info->base_name, PLUGIN_FINISH_UNIT,
                     on_plugin_finish_unit, (void *)plugin_instance);
   
-  SimpleGimplePass_do_init(plugin_info, GIMPLE_PASS, sizeof(struct gimple_opt_pass));
-
   std::cerr << "Plugin successfully initialized\n";
   
   return 0;  
