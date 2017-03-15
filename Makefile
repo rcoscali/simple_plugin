@@ -66,9 +66,9 @@ chkadd.s: chkadd.c
 	$(GXX) $(GXXFLAGS) -S -x c chkadd.c -o chkadd.s
 
 chkadd: simple.so install chkadd.s
-	/bin/echo -ne "digraph {\n" > graph.dot
+	/bin/echo -ne "digraph {\n" > graph_chkadd.dot
 	$(GXX) $(GXXFLAGS) $(GXXPLUGINFLAGS) -fplugin-arg-simple-graphname=graph_chkadd -c -x c++ chkadd.c -o chkadd.o
-	/bin/echo -ne "\n}\n" >> graph.dot
+	/bin/echo -ne "\n}\n" >> graph_chkadd.dot
 	dot -Tsvg -O graph.dot
 
 .PHONY: all clean install check test debugtest chkadd

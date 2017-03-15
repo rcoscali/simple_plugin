@@ -1,0 +1,112 @@
+digraph {
+subgraph "cluster_void chktst()" {
+	style="dashed";
+	color="black";
+	label="void chktst() ()";
+	fn_0_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_0_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_0_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|local_ariane_1\ =\ 0;\l\
+}"];
+
+	fn_0_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|lab1:\l\
+|ariane.0_3\ =\ ariane;\l\
+|delta.1_4\ =\ delta;\l\
+|ariane.2_5\ =\ ariane.0_3\ +\ delta.1_4;\l\
+|ariane\ =\ ariane.2_5;\l\
+|local_ariane_7\ =\ ariane;\l\
+}"];
+
+	fn_0_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|lab2:\l\
+|ariane.3_8\ =\ ariane;\l\
+|if\ (ariane.3_8\ !=\ local_ariane_7)\l\
+\ \ goto\ \<bb\ 5\>;\l\
+else\l\
+\ \ goto\ \<bb\ 6\>;\l\
+}"];
+
+	fn_0_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|__assert_fail\ (0B,\ \"chkadd.c\",\ 21,\ &__PRETTY_FUNCTION__);\l\
+}"];
+
+	fn_0_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|ariane.4_9\ =\ ariane;\l\
+|delta.5_10\ =\ delta;\l\
+|ariane.6_11\ =\ ariane.4_9\ -\ delta.5_10;\l\
+|ariane\ =\ ariane.6_11;\l\
+|return;\l\
+}"];
+
+	fn_0_basic_block_0:s -> fn_0_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_2:s -> fn_0_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_3:s -> fn_0_basic_block_4:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_4:s -> fn_0_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_0_basic_block_4:s -> fn_0_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_0_basic_block_6:s -> fn_0_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_0_basic_block_0:s -> fn_0_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_void chktst()" {
+	style="dashed";
+	color="black";
+	label="void chktst() ()";
+	fn_0_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_0_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ \ 3:\ NOTE_INSN_BASIC_BLOCK\ 2\l\
+|\ \ \ 38:\ [--sp:DI]=bp:DI\l\
+|\ \ \ 39:\ bp:DI=sp:DI\l\
+|\ \ \ 40:\ \{sp:DI=sp:DI-0x10;clobber\ flags:CC;clobber\ [scratch];\}\l\
+|\ \ \ 41:\ NOTE_INSN_PROLOGUE_END\l\
+|\ \ \ \ 2:\ NOTE_INSN_FUNCTION_BEG\l\
+|\ \ \ \ 5:\ [bp:DI-0x4]=0\l\
+|\ \ \ \ 6:\ NOTE_INSN_DELETED_LABEL\ (\"lab1\")\l\
+|\ \ \ \ 8:\ dx:SI=[`ariane']\l\
+|\ \ \ \ 9:\ ax:SI=[`delta']\l\
+|\ \ \ 10:\ \{ax:SI=ax:SI+dx:SI;clobber\ flags:CC;\}\l\
+|\ \ \ 11:\ [`ariane']=ax:SI\l\
+|\ \ \ 12:\ ax:SI=[`ariane']\l\
+|\ \ \ 13:\ [bp:DI-0x4]=ax:SI\l\
+|\ \ \ 14:\ NOTE_INSN_DELETED_LABEL\ (\"lab2\")\l\
+|\ \ \ 16:\ ax:SI=[`ariane']\l\
+|\ \ \ 17:\ flags:CCZ=cmp(ax:SI,[bp:DI-0x4])\l\
+|\ \ \ 18:\ pc=\{(flags:CCZ==0)?L26:pc\}\l\
+}"];
+
+	fn_0_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 26:\ L26:\l\
+|\ \ \ 27:\ NOTE_INSN_BASIC_BLOCK\ 4\l\
+|\ \ \ 28:\ dx:SI=[`ariane']\l\
+|\ \ \ 29:\ ax:SI=[`delta']\l\
+|\ \ \ 30:\ \{dx:SI=dx:SI-ax:SI;clobber\ flags:CC;\}\l\
+|\ \ \ 37:\ ax:SI=dx:SI\l\
+|\ \ \ 31:\ [`ariane']=ax:SI\l\
+|\ \ \ 34:\ 0\l\
+|\ \ \ 42:\ NOTE_INSN_EPILOGUE_BEG\l\
+|\ \ \ 43:\ \{sp:DI=bp:DI+0x8;bp:DI=[bp:DI];clobber\ [scratch];\}\l\
+\ \ \ \ \ \ REG_CFA_DEF_CFA\ sp:DI+0x8\l\
+|\ \ \ 44:\ simple_return\l\
+}"];
+
+	fn_0_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 19:\ NOTE_INSN_BASIC_BLOCK\ 3\l\
+|\ \ \ 20:\ cx:DI=`_ZZ6chktstvE19__PRETTY_FUNCTION__'\l\
+|\ \ \ 21:\ dx:SI=0x15\l\
+|\ \ \ 22:\ si:DI=`*.LC0'\l\
+|\ \ \ 23:\ di:DI=0\l\
+|\ \ \ 24:\ call\ [`__assert_fail']\ argc:0\l\
+\ \ \ \ \ \ REG_ARGS_SIZE\ 0\l\
+\ \ \ \ \ \ REG_NORETURN\ 0\l\
+\ \ \ \ \ \ REG_EH_REGION\ 0\l\
+}"];
+
+	fn_0_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_0_basic_block_0:s -> fn_0_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_2:s -> fn_0_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_2:s -> fn_0_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_0_basic_block_4:s -> fn_0_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[100%]"];
+	fn_0_basic_block_0:s -> fn_0_basic_block_1:n [style="invis",constraint=true];
+}
+
+}
