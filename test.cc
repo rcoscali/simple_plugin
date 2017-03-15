@@ -3,12 +3,47 @@
 int
 foo(int a)
 {
+  __asm__ volatile ("nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop" : );
   int b = a;
   for (int i = 0; i < 3; i++)
     b++;
+
+  __asm__ volatile ("nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop" : );
   if (b > 5)
-    return b;
+    {
+      __asm__ volatile ("nop\n\t"
+                        "nop\n\t"
+                        "nop\n\t"
+                        "nop\n\t"
+                        "nop\n\t"
+                        "nop\n\t"
+                        "nop\n\t"
+                        "nop" : );
+      return b;
+    }
       
+  __asm__ volatile ("nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n\t"
+                    "nop\n" : );
   return b+4;
 }
 

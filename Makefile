@@ -51,10 +51,14 @@ check: simple.so install
 	$(GXX) $(GXXFLAGS) $(GXXPLUGINFLAGS) -c -x c++ /dev/null -o /dev/null
 
 test: simple.so install
+	$(GXX) $(GXXFLAGS) -S -x c++ test.cc -o test.s
 	/bin/echo -ne "digraph {\n" > graph_test.dot
 	$(GXX) $(GXXFLAGS) $(GXXPLUGINFLAGS) -fplugin-arg-simple-graphname=graph_test -c -x c++ test.cc -o test.o
 	/bin/echo -ne "\n}\n" >> graph_test.dot
 	dot -Tsvg -O graph_test.dot
+	echo ";;# ndisasm -b 64 -p intel -e $$((0x`readelf -S test.o | grep -w -A1 \.text | head -1 | awk '{print \$$6}'`)) -k $$((0x`readelf -S test.o | grep -w -A1 \.text | tail -1 | awk '{print \$$1}'`)),5000 test.o" > test.S
+	ndisasm -b 64 -p intel -e $$((0x`readelf -S test.o | grep -w -A1 \.text | head -1 | awk '{print \$$6}'`)) -k $$((0x`readelf -S test.o | grep -w -A1 \.text | tail -1 | awk '{print \$$1}'`)),5000 test.o >> test.S
+	cat test.S
 
 debugtest: simple.so install
 	/bin/echo -ne "digraph {\n" > graph_test.dot

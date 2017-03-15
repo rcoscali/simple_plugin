@@ -34,6 +34,7 @@
 #include "tree-pretty-print.h"
 #include "cfghooks.h"
 #include "graph.h"
+#include "gimple-iterator.h"
 
 using namespace std;
 
@@ -241,6 +242,26 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
   if (!memcmp(pass->name , "*clean_state", 12))
     {
       printf("***>>> HERE <<<***\n");
+
+      vec<tree, va_gc> *inputs, *outputs, *clobbers, *labels;
+      vec_alloc (inputs, 0);
+      vec_alloc (outputs, 0);
+      vec_alloc (clobbers, 0);
+      vec_alloc (labels, 0);
+      gasm *gimple_asm_stmt = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n",
+                                                   inputs,
+                                                   outputs,
+                                                   clobbers,
+                                                   labels);
+      basic_block bb;      
+      FOR_EACH_BB_FN(bb, cfun)
+        {
+          gimple_stmt_iterator gsi_start = gsi_start_nondebug_after_labels_bb (bb);
+          gsi_insert_before_without_update (&gsi_start, gimple_asm_stmt, GSI_SAME_STMT);
+          gimple_stmt_iterator gsi_last = gsi_last_nondebug_bb (bb);
+          gsi_insert_after_without_update (&gsi_last, gimple_asm_stmt, GSI_SAME_STMT);
+        }
+
       print_context;
     }
 }
