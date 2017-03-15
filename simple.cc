@@ -243,25 +243,6 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
     {
       printf("***>>> HERE <<<***\n");
 
-      vec<tree, va_gc> *inputs, *outputs, *clobbers, *labels;
-      vec_alloc (inputs, 0);
-      vec_alloc (outputs, 0);
-      vec_alloc (clobbers, 0);
-      vec_alloc (labels, 0);
-      gasm *gimple_asm_stmt = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n",
-                                                   inputs,
-                                                   outputs,
-                                                   clobbers,
-                                                   labels);
-      basic_block bb;      
-      FOR_EACH_BB_FN(bb, cfun)
-        {
-          gimple_stmt_iterator gsi_start = gsi_start_nondebug_after_labels_bb (bb);
-          gsi_insert_before_without_update (&gsi_start, gimple_asm_stmt, GSI_SAME_STMT);
-          gimple_stmt_iterator gsi_last = gsi_last_nondebug_bb (bb);
-          gsi_insert_after_without_update (&gsi_last, gimple_asm_stmt, GSI_SAME_STMT);
-        }
-
       print_context;
     }
 }
@@ -283,7 +264,46 @@ on_PLUGIN_NEW_PASS(void *gcc_data, void *user_data)
   printf("pass name = %s\n", pass->name);
   printf("pass index = %d\n", pass->static_pass_number);
   
-  print_context;
+  if (!memcmp(pass->name , "*clean_state", 12))
+    {
+      printf("***>>> HERE BEFORE <<<***\n");
+      
+      print_context;
+
+      basic_block bb;      
+      FOR_EACH_BB_FN(bb, cfun)
+        {
+          gimple_stmt_iterator gsi_start = gsi_start_nondebug_after_labels_bb (bb);
+          vec<tree, va_gc> *inputs1, *outputs1, *clobbers1, *labels1;
+          vec_alloc (inputs1, 0);
+          vec_alloc (outputs1, 0);
+          vec_alloc (clobbers1, 0);
+          vec_alloc (labels1, 0);
+          gasm *gimple_asm_stmt1 = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n",
+                                                        inputs1,
+                                                        outputs1,
+                                                        clobbers1,
+                                                        labels1);
+          gsi_insert_before (&gsi_start, gimple_asm_stmt1, GSI_SAME_STMT);
+
+          gimple_stmt_iterator gsi_last = gsi_last_nondebug_bb (bb);
+          vec<tree, va_gc> *inputs2, *outputs2, *clobbers2, *labels2;
+          vec_alloc (inputs2, 0);
+          vec_alloc (outputs2, 0);
+          vec_alloc (clobbers2, 0);
+          vec_alloc (labels2, 0);
+          gasm *gimple_asm_stmt2 = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n",
+                                                        inputs2,
+                                                        outputs2,
+                                                        clobbers2,
+                                                        labels2);
+          gsi_insert_after (&gsi_last, gimple_asm_stmt2, GSI_SAME_STMT);
+        }
+
+      printf("***>>> HERE AFTER <<<***\n");
+      
+      print_context;
+    }
 }
 
 // on_PLUGIN_FINISH_UNIT
@@ -363,7 +383,6 @@ on_PLUGIN_ALL_IPA_PASSES_END(void *gcc_data, void *user_data)
 
   simple_plugin_t *pi = (simple_plugin_t *)user_data;
   
-  print_context;
 }
 
 // trace_callback_for_PLUGIN_EARLY_GIMPLE_PASSES_END
