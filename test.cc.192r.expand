@@ -1,0 +1,856 @@
+
+;; Function int foo(int) (_Z3fooi, funcdef_no=2, decl_uid=3006, cgraph_uid=2, symbol_order=2)
+
+int foo(int) (int a)
+{
+  int i;
+  int b;
+  int D.3030;
+  int _3;
+  int _9;
+  int _10;
+
+;;   basic block 2, loop depth 0
+;;    pred:       ENTRY
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  b_5 = a_4(D);
+  i_6 = 0;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       3
+
+;;   basic block 3, loop depth 1
+;;    pred:       2
+;;                4
+  # b_1 = PHI <b_5(2), b_7(4)>
+  # i_2 = PHI <i_6(2), i_8(4)>
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  if (i_2 > 2)
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       5
+;;                4
+
+;;   basic block 4, loop depth 1
+;;    pred:       3
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  b_7 = b_1 + 1;
+  i_8 = i_2 + 1;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+  goto <bb 3>;
+;;    succ:       3
+
+;;   basic block 5, loop depth 0
+;;    pred:       3
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  if (b_1 > 5)
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       6
+;;                7
+
+;;   basic block 6, loop depth 0
+;;    pred:       5
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  _9 = b_1;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+  goto <bb 8> (<L5>);
+;;    succ:       8
+
+;;   basic block 7, loop depth 0
+;;    pred:       5
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  _10 = b_1 + 4;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       8
+
+;;   basic block 8, loop depth 0
+;;    pred:       6
+;;                7
+  # _3 = PHI <_9(6), _10(7)>
+<L5>:
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  return _3;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       EXIT
+
+}
+
+
+
+Partition map 
+
+Partition 1 (b_1 - 1 )
+Partition 2 (i_2 - 2 )
+Partition 3 (_3 - 3 )
+Partition 4 (a_4(D) - 4 )
+Partition 5 (b_5 - 5 )
+Partition 6 (i_6 - 6 )
+Partition 7 (b_7 - 7 )
+Partition 8 (i_8 - 8 )
+Partition 9 (_9 - 9 )
+Partition 10 (_10 - 10 )
+
+
+Partition map 
+
+Partition 0 (b_1 - 1 )
+Partition 1 (i_2 - 2 )
+Partition 2 (_3 - 3 )
+Partition 3 (a_4(D) - 4 )
+Partition 4 (b_5 - 5 )
+Partition 5 (i_6 - 6 )
+Partition 6 (b_7 - 7 )
+Partition 7 (i_8 - 8 )
+Partition 8 (_9 - 9 )
+Partition 9 (_10 - 10 )
+
+
+Conflict graph:
+
+After sorting:
+Sorted Coalesce list:
+(2147483646) b_1 <-> b_5
+(2147483646) b_1 <-> b_7
+(2147483646) i_2 <-> i_6
+(2147483646) i_2 <-> i_8
+
+Partition map 
+
+Partition 0 (b_1 - 1 )
+Partition 1 (i_2 - 2 )
+Partition 2 (_3 - 3 )
+Partition 3 (a_4(D) - 4 )
+Partition 4 (b_5 - 5 )
+Partition 5 (i_6 - 6 )
+Partition 6 (b_7 - 7 )
+Partition 7 (i_8 - 8 )
+Partition 8 (_9 - 9 )
+Partition 9 (_10 - 10 )
+
+Coalesce list: (1)b_1 & (5)b_5 [map: 0, 4] : Success -> 0
+Coalesce list: (1)b_1 & (7)b_7 [map: 0, 6] : Success -> 0
+Coalesce list: (2)i_2 & (6)i_6 [map: 1, 5] : Success -> 1
+Coalesce list: (2)i_2 & (8)i_8 [map: 1, 7] : Success -> 1
+Coalesce list: (3)_3 & (10)_10 [map: 2, 9] : Success -> 2
+Coalesce list: (3)_3 & (9)_9 [map: 2, 8] : Success -> 2
+Coalesce list: (2)i_2 & (8)i_2: Already Coalesced.
+Coalesce list: (2)i_2 & (6)i_2: Already Coalesced.
+Coalesce list: (1)b_1 & (7)b_1: Already Coalesced.
+Coalesce list: (1)b_1 & (5)b_1: Already Coalesced.
+After Coalescing:
+
+Partition map 
+
+Partition 0 (b_1 - 1 5 7 )
+Partition 1 (i_2 - 2 6 8 )
+Partition 2 (_3 - 3 9 10 )
+Partition 3 (a_4(D) - 4 )
+
+int foo(int) (int a)
+{
+  int i;
+  int b;
+  int D.3030;
+  int _3;
+  int _9;
+  int _10;
+
+;;   basic block 2, loop depth 0
+;;    pred:       ENTRY
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  b_5 = a_4(D);
+  i_6 = 0;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       3
+
+;;   basic block 3, loop depth 1
+;;    pred:       2
+;;                4
+  # b_1 = PHI <b_5(2), b_7(4)>
+  # i_2 = PHI <i_6(2), i_8(4)>
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  if (i_2 > 2)
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       5
+;;                4
+
+;;   basic block 4, loop depth 1
+;;    pred:       3
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  b_7 = b_1 + 1;
+  i_8 = i_2 + 1;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+  goto <bb 3>;
+;;    succ:       3
+
+;;   basic block 5, loop depth 0
+;;    pred:       3
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  if (b_1 > 5)
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       6
+;;                7
+
+;;   basic block 6, loop depth 0
+;;    pred:       5
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  _9 = b_1;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+  goto <bb 8> (<L5>);
+;;    succ:       8
+
+;;   basic block 7, loop depth 0
+;;    pred:       5
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  _10 = b_1 + 4;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       8
+
+;;   basic block 8, loop depth 0
+;;    pred:       6
+;;                7
+  # _3 = PHI <_9(6), _10(7)>
+<L5>:
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+  return _3;
+  __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;    succ:       EXIT
+
+}
+
+
+
+;; Generating RTL for gimple basic block 2
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 6 5 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; b_5 = a_4(D);
+
+(insn 7 6 8 (set (reg:SI 89)
+        (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                (const_int -20 [0xffffffffffffffec])) [0 a+0 S4 A32])) test.cc:21 -1
+     (nil))
+
+(insn 8 7 0 (set (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])
+        (reg:SI 89)) test.cc:21 -1
+     (nil))
+
+;; i_6 = 0;
+
+(insn 9 8 0 (set (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                (const_int -8 [0xfffffffffffffff8])) [0 i+0 S4 A32])
+        (const_int 0 [0])) test.cc:22 -1
+     (nil))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 10 9 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 3
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 12 11 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; if (i_2 > 2)
+
+(insn 13 12 14 (set (reg:CCGC 17 flags)
+        (compare:CCGC (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                    (const_int -8 [0xfffffffffffffff8])) [0 i+0 S4 A32])
+            (const_int 2 [0x2]))) test.cc:22 -1
+     (nil))
+
+(jump_insn 14 13 0 (set (pc)
+        (if_then_else (gt (reg:CCGC 17 flags)
+                (const_int 0 [0]))
+            (label_ref 0)
+            (pc))) test.cc:22 -1
+     (nil))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 15 14 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 4
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 17 16 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; b_7 = b_1 + 1;
+
+(insn 18 17 0 (parallel [
+            (set (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                        (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])
+                (plus:SI (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                            (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) test.cc:23 -1
+     (nil))
+
+;; i_8 = i_2 + 1;
+
+(insn 19 18 0 (parallel [
+            (set (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                        (const_int -8 [0xfffffffffffffff8])) [0 i+0 S4 A32])
+                (plus:SI (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                            (const_int -8 [0xfffffffffffffff8])) [0 i+0 S4 A32])
+                    (const_int 1 [0x1])))
+            (clobber (reg:CC 17 flags))
+        ]) test.cc:22 -1
+     (nil))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 20 19 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 5
+
+;; 
+
+(code_label 24 23 25 2 "" [0 uses])
+
+(note 25 24 0 NOTE_INSN_BASIC_BLOCK)
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 26 25 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; if (b_1 > 5)
+
+(insn 27 26 28 (set (reg:CCGC 17 flags)
+        (compare:CCGC (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                    (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])
+            (const_int 5 [0x5]))) test.cc:26 -1
+     (nil))
+
+(jump_insn 28 27 0 (set (pc)
+        (if_then_else (le (reg:CCGC 17 flags)
+                (const_int 0 [0]))
+            (label_ref 0)
+            (pc))) test.cc:26 -1
+     (nil))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 29 28 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 6
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 31 30 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; _9 = b_1;
+
+(insn 32 31 0 (set (reg:SI 87 [ D.3046 ])
+        (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])) test.cc:29 -1
+     (nil))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 33 32 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 7
+
+;; 
+
+(code_label 36 35 37 4 "" [0 uses])
+
+(note 37 36 0 NOTE_INSN_BASIC_BLOCK)
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 38 37 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; _10 = b_1 + 4;
+
+(insn 39 38 40 (set (reg:SI 90)
+        (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])) test.cc:33 -1
+     (nil))
+
+(insn 40 39 0 (parallel [
+            (set (reg:SI 87 [ D.3046 ])
+                (plus:SI (reg:SI 90)
+                    (const_int 4 [0x4])))
+            (clobber (reg:CC 17 flags))
+        ]) test.cc:33 -1
+     (expr_list:REG_EQUAL (plus:SI (mem/c:SI (plus:DI (reg/f:DI 82 virtual-stack-vars)
+                    (const_int -4 [0xfffffffffffffffc])) [0 b+0 S4 A32])
+            (const_int 4 [0x4]))
+        (nil)))
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 41 40 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; Generating RTL for gimple basic block 8
+
+;; <L5>:
+
+(code_label 42 41 43 5 "" [0 uses])
+
+(note 43 42 0 NOTE_INSN_BASIC_BLOCK)
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 44 43 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+
+;; return _3;
+
+(insn 45 44 46 (set (reg:SI 88 [ <retval> ])
+        (reg:SI 87 [ D.3046 ])) -1
+     (nil))
+
+(jump_insn 46 45 47 (set (pc)
+        (label_ref 0)) -1
+     (nil))
+
+(barrier 47 46 0)
+
+;; __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+
+(insn 48 47 0 (parallel [
+            (asm_operands/v ("nop
+	nop
+	nop
+	nop
+	nop
+") ("") 0 []
+                 []
+                 [])
+            (clobber (reg:QI 18 fpsr))
+            (clobber (reg:QI 17 flags))
+        ]) -1
+     (nil))
+Purging all but fake & fallthru egde from (bb) 11
+Purged non-fallthru edges from bb 11
+Purging all but fake & fallthru egde from (bb) 12
+Purged non-fallthru edges from bb 12
+Purging all but fake & fallthru egde from (bb) 13

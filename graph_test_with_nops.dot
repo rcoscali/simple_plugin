@@ -1,0 +1,789 @@
+digraph {
+subgraph "cluster_int foo(int)" {
+	style="dashed";
+	color="black";
+	label="int foo(int) ()";
+	subgraph cluster_2_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_2_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|if\ (i\ \>\ 2)\l\
+\ \ goto\ \<bb\ 5\>;\l\
+else\l\
+\ \ goto\ \<bb\ 4\>;\l\
+}"];
+
+	fn_2_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|b\ =\ b\ +\ 1;\l\
+|i\ =\ i\ +\ 1;\l\
+goto\ \<bb\ 3\>;\l\
+}"];
+
+	}
+	fn_2_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_2_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_2_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|b\ =\ a;\l\
+|i\ =\ 0;\l\
+}"];
+
+	fn_2_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|if\ (b\ \>\ 5)\l\
+\ \ goto\ \<bb\ 6\>;\l\
+else\l\
+\ \ goto\ \<bb\ 7\>;\l\
+}"];
+
+	fn_2_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|D.3030\ =\ b;\l\
+goto\ \<bb\ 8\>\ (\<L5\>);\l\
+}"];
+
+	fn_2_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 7\>:\l\
+|D.3030\ =\ b\ +\ 4;\l\
+}"];
+
+	fn_2_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 8\>:\l\
+|\<L5\>:\l\
+|return\ D.3030;\l\
+}"];
+
+	fn_2_basic_block_0:s -> fn_2_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_2:s -> fn_2_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_4:s -> fn_2_basic_block_3:n [style="dotted,bold",color=blue,weight=10,constraint=false, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_6:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_7:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_8:s -> fn_2_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_0:s -> fn_2_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_int foo(int)" {
+	style="dashed";
+	color="black";
+	label="int foo(int) ()";
+	subgraph cluster_2_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_2_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (i\ \>\ 2)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|b\ =\ b\ +\ 1;\l\
+|i\ =\ i\ +\ 1;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 3\>;\l\
+}"];
+
+	}
+	fn_2_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_2_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_2_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|b\ =\ a;\l\
+|i\ =\ 0;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (b\ \>\ 5)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3030\ =\ b;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 8\>\ (\<L5\>);\l\
+}"];
+
+	fn_2_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 7\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3030\ =\ b\ +\ 4;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 8\>:\l\
+|\<L5\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|return\ D.3030;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_0:s -> fn_2_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_2:s -> fn_2_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_4:s -> fn_2_basic_block_3:n [style="dotted,bold",color=blue,weight=10,constraint=false, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_6:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_7:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_8:s -> fn_2_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_0:s -> fn_2_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_int main(int, char**)" {
+	style="dashed";
+	color="black";
+	label="int main(int, char**) ()";
+	subgraph cluster_3_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_3_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|if\ (j\ \>\ 2)\l\
+\ \ goto\ \<bb\ 7\>;\l\
+else\l\
+\ \ goto\ \<bb\ 6\>;\l\
+}"];
+
+	fn_3_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|a\ =\ a\ +\ 1;\l\
+|j\ =\ j\ +\ 1;\l\
+goto\ \<bb\ 5\>;\l\
+}"];
+
+	}
+	fn_3_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_3_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_3_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|a\ =\ 0;\l\
+|b\ =\ 0;\l\
+|if\ (argc\ \<=\ 1)\l\
+\ \ goto\ \<bb\ 3\>;\l\
+else\l\
+\ \ goto\ \<bb\ 4\>;\l\
+}"];
+
+	fn_3_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|D.3034\ =\ -1;\l\
+goto\ \<bb\ 14\>\ (\<L12\>);\l\
+}"];
+
+	fn_3_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|D.3035\ =\ argv\ +\ 8;\l\
+|D.3036\ =\ *D.3035;\l\
+|a\ =\ atoi\ (D.3036);\l\
+|j\ =\ 0;\l\
+}"];
+
+	fn_3_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 7\>:\l\
+|if\ (a\ \<=\ 4)\l\
+\ \ goto\ \<bb\ 8\>;\l\
+else\l\
+\ \ goto\ \<bb\ 9\>;\l\
+}"];
+
+	fn_3_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 8\>:\l\
+|b\ =\ foo\ (a);\l\
+}"];
+
+	fn_3_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 9\>:\l\
+|switch\ (a)\ \<default:\ \<L10\>,\ case\ 8:\ \<L8\>,\ case\ 12:\ \<L9\>\>\l\
+}"];
+
+	fn_3_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 10\>:\l\
+|\<L8\>:\l\
+|a\ =\ a\ +\ b;\l\
+goto\ \<bb\ 13\>;\l\
+}"];
+
+	fn_3_basic_block_11 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 11\>:\l\
+|\<L9\>:\l\
+|a\ =\ a\ +\ 100;\l\
+goto\ \<bb\ 13\>;\l\
+}"];
+
+	fn_3_basic_block_12 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 12\>:\l\
+|\<L10\>:\l\
+|D.3042\ =\ b\ +\ 50;\l\
+|a\ =\ D.3042\ +\ a;\l\
+}"];
+
+	fn_3_basic_block_13 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 13\>:\l\
+|D.3034\ =\ a;\l\
+}"];
+
+	fn_3_basic_block_14 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 14\>:\l\
+|\<L12\>:\l\
+|return\ D.3034;\l\
+}"];
+
+	fn_3_basic_block_0:s -> fn_3_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_3:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_3:s -> fn_3_basic_block_14:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_4:s -> fn_3_basic_block_5:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_6:s -> fn_3_basic_block_5:n [style="dotted,bold",color=blue,weight=10,constraint=false, label="[0%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_8:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_8:s -> fn_3_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_12:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_10:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_11:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_10:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_11:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_12:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_13:s -> fn_3_basic_block_14:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_14:s -> fn_3_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_0:s -> fn_3_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_int main(int, char**)" {
+	style="dashed";
+	color="black";
+	label="int main(int, char**) ()";
+	subgraph cluster_3_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_3_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (j\ \>\ 2)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|a\ =\ a\ +\ 1;\l\
+|j\ =\ j\ +\ 1;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 5\>;\l\
+}"];
+
+	}
+	fn_3_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_3_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_3_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|a\ =\ 0;\l\
+|b\ =\ 0;\l\
+|if\ (argc\ \<=\ 1)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3034\ =\ -1;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 14\>\ (\<L12\>);\l\
+}"];
+
+	fn_3_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3035\ =\ argv\ +\ 8;\l\
+|D.3036\ =\ *D.3035;\l\
+|a\ =\ atoi\ (D.3036);\l\
+|j\ =\ 0;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 7\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (a\ \<=\ 4)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 8\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|b\ =\ foo\ (a);\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 9\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|switch\ (a)\ \<default:\ \<L10\>,\ case\ 8:\ \<L8\>,\ case\ 12:\ \<L9\>\>\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 10\>:\l\
+|\<L8\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|a\ =\ a\ +\ b;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 13\>;\l\
+}"];
+
+	fn_3_basic_block_11 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 11\>:\l\
+|\<L9\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|a\ =\ a\ +\ 100;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 13\>;\l\
+}"];
+
+	fn_3_basic_block_12 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 12\>:\l\
+|\<L10\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3042\ =\ b\ +\ 50;\l\
+|a\ =\ D.3042\ +\ a;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_13 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 13\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|D.3034\ =\ a;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_14 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 14\>:\l\
+|\<L12\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|return\ D.3034;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_3_basic_block_0:s -> fn_3_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_3:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_3:s -> fn_3_basic_block_14:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_4:s -> fn_3_basic_block_5:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_6:s -> fn_3_basic_block_5:n [style="dotted,bold",color=blue,weight=10,constraint=false, label="[0%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_8:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_8:s -> fn_3_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_12:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_10:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_11:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_10:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_11:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_12:s -> fn_3_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_13:s -> fn_3_basic_block_14:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_14:s -> fn_3_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_0:s -> fn_3_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_int foo(int)" {
+	style="dashed";
+	color="black";
+	label="int foo(int) ()";
+	subgraph cluster_2_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_2_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 3\>:\l\
+|#\ b_1\ =\ PHI\ \<b_5(2),\ b_7(4)\>\l\
+|#\ i_2\ =\ PHI\ \<i_6(2),\ i_8(4)\>\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (i_2\ \>\ 2)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 4\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|b_7\ =\ b_1\ +\ 1;\l\
+|i_8\ =\ i_2\ +\ 1;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 3\>;\l\
+}"];
+
+	}
+	fn_2_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_2_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_2_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 2\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|b_5\ =\ a_4(D);\l\
+|i_6\ =\ 0;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 5\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|if\ (b_1\ \>\ 5)\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 6\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|_9\ =\ b_1;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+goto\ \<bb\ 8\>\ (\<L5\>);\l\
+}"];
+
+	fn_2_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 7\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|_10\ =\ b_1\ +\ 4;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\<bb\ 8\>:\l\
+|#\ _3\ =\ PHI\ \<_9(6),\ _10(7)\>\l\
+|\<L5\>:\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+|return\ _3;\l\
+|__asm__(\"nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+	nop\l\
+\");\l\
+}"];
+
+	fn_2_basic_block_0:s -> fn_2_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_2:s -> fn_2_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_3:s -> fn_2_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_4:s -> fn_2_basic_block_3:n [style="dotted,bold",color=blue,weight=10,constraint=false, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_5:s -> fn_2_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_6:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_7:s -> fn_2_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_2_basic_block_8:s -> fn_2_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_2_basic_block_0:s -> fn_2_basic_block_1:n [style="invis",constraint=true];
+}
+}

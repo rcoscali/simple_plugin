@@ -1,0 +1,1119 @@
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x26809e0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = gimple
+pass index = 277
+    cfun = 0x7fccc6cacf18
+    cfun->cfg = 0x7fccc77e2990
+    cfun->cfg->x_entry_block_ptr = 0x7fccc7653d00
+    cfun->cfg->x_entry_block_ptr->next_bb = 0x7fccc7653dd0
+    cfun->cfg->x_entry_block_ptr->prev_bb = (nil)
+***>>> HERE BEFORE <<<***
+cfun = 0x7fccc6cacf18
+cfun->decl = 0x7fccc6caabd0
+  static int foo (int);
+cfun->cfg = 0x7fccc77e2990
+*** BASIC BLOCKS ***
+*** ========================
+;;     basic block 0, loop depth 0
+;;      pred:      
+;; 
+;;      succ:       2
+
+*** ========================
+;;     basic block 2, loop depth 0
+;;      pred:       ENTRY
+;;     starting at line 21
+    [test.cc:21:11] b = a;
+    [test.cc:22:16] i = 0;
+;;      succ:       3
+
+*** ========================
+;;     basic block 3, loop depth 1
+;;      pred:       2
+;;                  4
+;;     starting at line 22, discriminator 3
+    [test.cc:22:21] if (i > 2)
+      goto <bb 5>;
+    else
+      goto <bb 4>;
+;;      succ:       5
+;;                  4
+
+*** ========================
+;;     basic block 4, loop depth 1
+;;      pred:       3
+;;     starting at line 23, discriminator 2
+    [test.cc:23:8] b = b + 1;
+    [test.cc:22:3] i = i + 1;
+    [test.cc:22:3] goto <bb 3>;
+;;      succ:       3
+
+*** ========================
+;;     basic block 5, loop depth 0
+;;      pred:       3
+;;     starting at line 26
+    [test.cc:26:3] if (b > 5)
+      goto <bb 6>;
+    else
+      goto <bb 7>;
+;;      succ:       6
+;;                  7
+
+*** ========================
+;;     basic block 6, loop depth 0
+;;      pred:       5
+;;     starting at line 29
+    [test.cc:29:14] D.3030 = b;
+    [test.cc:29:14] goto <bb 8> (<L5>);
+;;      succ:       8
+
+*** ========================
+;;     basic block 7, loop depth 0
+;;      pred:       5
+;;     starting at line 33
+    [test.cc:33:12] D.3030 = b + 4;
+;;      succ:       8
+
+*** ========================
+;;     basic block 8, loop depth 0
+;;      pred:       6
+;;                  7
+;;     starting at line -1
+  <L5>:
+    return D.3030;
+;;      succ:       EXIT
+
+*** ========================
+;;     basic block 1, loop depth 0
+;;      pred:       8
+;; 
+;;      succ:      
+
+bool simple_plugin_t::has_arg(const char *key): entry
+bool simple_plugin_t::has_arg(const char *key): exit [true]
+>>>BEFORE: Single SUCC (BB #0) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #2) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #3) = False (2 edges)
+>>>BEFORE: Single SUCC (BB #4) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #5) = False (2 edges)
+>>>BEFORE: Single SUCC (BB #6) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #7) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #8) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #1) = False (0 edges)
+***>>> HERE AFTER <<<***
+>>>AFTER: Single SUCC (BB #0) = True (1 edges)
+>>>AFTER: Single SUCC (BB #2) = True (1 edges)
+>>>AFTER: Single SUCC (BB #3) = False (2 edges)
+>>>AFTER: Single SUCC (BB #4) = True (1 edges)
+>>>AFTER: Single SUCC (BB #5) = False (2 edges)
+>>>AFTER: Single SUCC (BB #6) = True (1 edges)
+>>>AFTER: Single SUCC (BB #7) = True (1 edges)
+>>>AFTER: Single SUCC (BB #8) = True (1 edges)
+>>>AFTER: Single SUCC (BB #1) = False (0 edges)
+cfun = 0x7fccc6cacf18
+cfun->decl = 0x7fccc6caabd0
+  static int foo (int);
+cfun->cfg = 0x7fccc77e2990
+*** BASIC BLOCKS ***
+*** ========================
+;;     basic block 0, loop depth 0
+;;      pred:      
+;; 
+;;      succ:       2
+
+*** ========================
+;;     basic block 2, loop depth 0
+;;      pred:       ENTRY
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:21:11] b = a;
+    [test.cc:22:16] i = 0;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       3
+
+*** ========================
+;;     basic block 3, loop depth 1
+;;      pred:       2
+;;                  4
+;;     starting at line -1, discriminator 3
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:22:21] if (i > 2)
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       5
+;;                  4
+
+*** ========================
+;;     basic block 4, loop depth 1
+;;      pred:       3
+;;     starting at line -1, discriminator 2
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:23:8] b = b + 1;
+    [test.cc:22:3] i = i + 1;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:22:3] goto <bb 3>;
+;;      succ:       3
+
+*** ========================
+;;     basic block 5, loop depth 0
+;;      pred:       3
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:26:3] if (b > 5)
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       6
+;;                  7
+
+*** ========================
+;;     basic block 6, loop depth 0
+;;      pred:       5
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:29:14] D.3030 = b;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:29:14] goto <bb 8> (<L5>);
+;;      succ:       8
+
+*** ========================
+;;     basic block 7, loop depth 0
+;;      pred:       5
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:33:12] D.3030 = b + 4;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       8
+
+*** ========================
+;;     basic block 8, loop depth 0
+;;      pred:       6
+;;                  7
+;;     starting at line -1
+  <L5>:
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    return D.3030;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       EXIT
+
+*** ========================
+;;     basic block 1, loop depth 0
+;;      pred:       8
+;; 
+;;      succ:      
+
+bool simple_plugin_t::has_arg(const char *key): entry
+bool simple_plugin_t::has_arg(const char *key): exit [true]
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x264b9e0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = *warn_unused_result
+pass index = -1
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2655ed0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = omplower
+pass index = 11
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2655f30
+   user_data = 0x2680440
+    Current delta = 0
+pass name = lower
+pass index = 12
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2655ff0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = ehopt
+pass index = 14
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2656050
+   user_data = 0x2680440
+    Current delta = 0
+pass name = eh
+pass index = 15
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x26560b0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = cfg
+pass index = 16
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = (nil)
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2656110
+   user_data = 0x2680440
+    Current delta = 0
+pass name = *warn_function_return
+pass index = -1
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = 0x7fccc77e2a20
+    cfun->cfg->x_entry_block_ptr = 0x7fccc6cb7000
+    cfun->cfg->x_entry_block_ptr->next_bb = 0x7fccc6cb70d0
+    cfun->cfg->x_entry_block_ptr->prev_bb = (nil)
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7110 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7178 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7248 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7318 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7380 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7450 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7520 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7588 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7658 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7658 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7658 	<<<***
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x2656170
+   user_data = 0x2680440
+    Current delta = 0
+pass name = ompexp
+pass index = 17
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = 0x7fccc77e2a20
+    cfun->cfg->x_entry_block_ptr = 0x7fccc6cb7000
+    cfun->cfg->x_entry_block_ptr->next_bb = 0x7fccc6cb70d0
+    cfun->cfg->x_entry_block_ptr->prev_bb = (nil)
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7110 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7178 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7248 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7318 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7380 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7450 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7520 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7588 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7658 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7658 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7658 	<<<***
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x26561d0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = *build_cgraph_edges
+pass index = -1
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = 0x7fccc77e2a20
+    cfun->cfg->x_entry_block_ptr = 0x7fccc6cb7000
+    cfun->cfg->x_entry_block_ptr->next_bb = 0x7fccc6cb70d0
+    cfun->cfg->x_entry_block_ptr->prev_bb = (nil)
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7110 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7110 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7178 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7178 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb71e0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7248 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7248 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb72b0 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7318 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7318 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7380 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7380 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb73e8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7450 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7450 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb74b8 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7520 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7520 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7588 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7588 	<<<***
+***>>>	 bb->flags = 3 	<<<***
+***>>>	 bb->flags & BB_RTL = 0 	<<<***
+***>>>	 !(bb->flags & BB_RTL) = 1 	<<<***
+***>>>	 bb->il = 0x7fccc6cb7658 	<<<***
+***>>>	 bb->il.gimple.seq = 0x7fccc6cb7658 	<<<***
+***>>>	 bb_seq_addr(bb) = 0x7fccc6cb7658 	<<<***
+============================
+Simple on_PLUGIN_PASS_EXECUTION
+    gcc_data = 0x26809e0
+   user_data = 0x2680440
+    Current delta = 0
+pass name = gimple
+pass index = 277
+    cfun = 0x7fccc6caf0a8
+    cfun->cfg = 0x7fccc77e2a20
+    cfun->cfg->x_entry_block_ptr = 0x7fccc6cb7000
+    cfun->cfg->x_entry_block_ptr->next_bb = 0x7fccc6cb70d0
+    cfun->cfg->x_entry_block_ptr->prev_bb = (nil)
+***>>> HERE BEFORE <<<***
+cfun = 0x7fccc6caf0a8
+cfun->decl = 0x7fccc6caaca8
+  static int main (int, char * *);
+cfun->cfg = 0x7fccc77e2a20
+*** BASIC BLOCKS ***
+*** ========================
+;;     basic block 0, loop depth 0
+;;      pred:      
+;; 
+;;      succ:       2
+
+*** ========================
+;;     basic block 2, loop depth 0
+;;      pred:       ENTRY
+;;     starting at line 40
+    [test.cc:40:11] a = 0;
+    [test.cc:41:11] b = 0;
+    [test.cc:44:3] if (argc <= 1)
+      goto <bb 3>;
+    else
+      goto <bb 4>;
+;;      succ:       3
+;;                  4
+
+*** ========================
+;;     basic block 3, loop depth 0
+;;      pred:       2
+;;     starting at line 47
+    [test.cc:47:16] D.3034 = -1;
+    [test.cc:47:16] goto <bb 14> (<L12>);
+;;      succ:       14
+
+*** ========================
+;;     basic block 4, loop depth 0
+;;      pred:       2
+;;     starting at line 52
+    [test.cc:52:18] D.3035 = argv + 8;
+    [test.cc:52:11] D.3036 = [test.cc:52:11] *D.3035;
+    [test.cc:52:20] a = atoi (D.3036);
+    [test.cc:55:16] j = 0;
+;;      succ:       5
+
+*** ========================
+;;     basic block 5, loop depth 1
+;;      pred:       4
+;;                  6
+;;     starting at line 55, discriminator 3
+    [test.cc:55:21] if (j > 2)
+      goto <bb 7>;
+    else
+      goto <bb 6>;
+;;      succ:       7
+;;                  6
+
+*** ========================
+;;     basic block 6, loop depth 1
+;;      pred:       5
+;;     starting at line 57, discriminator 2
+    [test.cc:57:10] a = a + 1;
+    [test.cc:55:3] j = j + 1;
+    [test.cc:55:3] goto <bb 5>;
+;;      succ:       5
+
+*** ========================
+;;     basic block 7, loop depth 0
+;;      pred:       5
+;;     starting at line 62
+    [test.cc:62:3] if (a <= 4)
+      goto <bb 8>;
+    else
+      goto <bb 9>;
+;;      succ:       8
+;;                  9
+
+*** ========================
+;;     basic block 8, loop depth 0
+;;      pred:       7
+;;     starting at line 64
+    [test.cc:64:17] b = foo (a);
+;;      succ:       9
+
+*** ========================
+;;     basic block 9, loop depth 0
+;;      pred:       7
+;;                  8
+;;     starting at line 70
+    [test.cc:70:3] switch (a) <[test.cc:82:5] default: <L10>, [test.cc:72:5] case 8: <L8>, [test.cc:77:5] case 12: <L9>>
+;;      succ:       12
+;;                  10
+;;                  11
+
+*** ========================
+;;     basic block 10, loop depth 0
+;;      pred:       9
+;;     starting at line 74
+  <L8>:
+    [test.cc:74:11] a = a + b;
+    [test.cc:76:7] goto <bb 13>;
+;;      succ:       13
+
+*** ========================
+;;     basic block 11, loop depth 0
+;;      pred:       9
+;;     starting at line 79
+  <L9>:
+    [test.cc:79:13] a = a + 100;
+    [test.cc:81:7] goto <bb 13>;
+;;      succ:       13
+
+*** ========================
+;;     basic block 12, loop depth 0
+;;      pred:       9
+;;     starting at line 84
+  <L10>:
+    [test.cc:84:11] D.3042 = b + 50;
+    [test.cc:84:14] a = D.3042 + a;
+;;      succ:       13
+
+*** ========================
+;;     basic block 13, loop depth 0
+;;      pred:       10
+;;                  11
+;;                  12
+;;     starting at line 90
+    [test.cc:90:10] D.3034 = a;
+;;      succ:       14
+
+*** ========================
+;;     basic block 14, loop depth 0
+;;      pred:       3
+;;                  13
+;;     starting at line -1
+  <L12>:
+    return D.3034;
+;;      succ:       EXIT
+
+*** ========================
+;;     basic block 1, loop depth 0
+;;      pred:       14
+;; 
+;;      succ:      
+
+bool simple_plugin_t::has_arg(const char *key): entry
+bool simple_plugin_t::has_arg(const char *key): exit [true]
+>>>BEFORE: Single SUCC (BB #0) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #2) = False (2 edges)
+>>>BEFORE: Single SUCC (BB #3) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #4) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #5) = False (2 edges)
+>>>BEFORE: Single SUCC (BB #6) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #7) = False (2 edges)
+>>>BEFORE: Single SUCC (BB #8) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #9) = False (3 edges)
+>>>BEFORE: Single SUCC (BB #10) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #11) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #12) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #13) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #14) = True (1 edges)
+>>>BEFORE: Single SUCC (BB #1) = False (0 edges)
+***>>> HERE AFTER <<<***
+>>>AFTER: Single SUCC (BB #0) = True (1 edges)
+>>>AFTER: Single SUCC (BB #2) = False (2 edges)
+>>>AFTER: Single SUCC (BB #3) = True (1 edges)
+>>>AFTER: Single SUCC (BB #4) = True (1 edges)
+>>>AFTER: Single SUCC (BB #5) = False (2 edges)
+>>>AFTER: Single SUCC (BB #6) = True (1 edges)
+>>>AFTER: Single SUCC (BB #7) = False (2 edges)
+>>>AFTER: Single SUCC (BB #8) = True (1 edges)
+>>>AFTER: Single SUCC (BB #9) = False (3 edges)
+>>>AFTER: Single SUCC (BB #10) = True (1 edges)
+>>>AFTER: Single SUCC (BB #11) = True (1 edges)
+>>>AFTER: Single SUCC (BB #12) = True (1 edges)
+>>>AFTER: Single SUCC (BB #13) = True (1 edges)
+>>>AFTER: Single SUCC (BB #14) = True (1 edges)
+>>>AFTER: Single SUCC (BB #1) = False (0 edges)
+cfun = 0x7fccc6caf0a8
+cfun->decl = 0x7fccc6caaca8
+  static int main (int, char * *);
+cfun->cfg = 0x7fccc77e2a20
+*** BASIC BLOCKS ***
+*** ========================
+;;     basic block 0, loop depth 0
+;;      pred:      
+;; 
+;;      succ:       2
+
+*** ========================
+;;     basic block 2, loop depth 0
+;;      pred:       ENTRY
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:40:11] a = 0;
+    [test.cc:41:11] b = 0;
+    [test.cc:44:3] if (argc <= 1)
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       3
+;;                  4
+
+*** ========================
+;;     basic block 3, loop depth 0
+;;      pred:       2
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:47:16] D.3034 = -1;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:47:16] goto <bb 14> (<L12>);
+;;      succ:       14
+
+*** ========================
+;;     basic block 4, loop depth 0
+;;      pred:       2
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:52:18] D.3035 = argv + 8;
+    [test.cc:52:11] D.3036 = [test.cc:52:11] *D.3035;
+    [test.cc:52:20] a = atoi (D.3036);
+    [test.cc:55:16] j = 0;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       5
+
+*** ========================
+;;     basic block 5, loop depth 1
+;;      pred:       4
+;;                  6
+;;     starting at line -1, discriminator 3
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:55:21] if (j > 2)
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       7
+;;                  6
+
+*** ========================
+;;     basic block 6, loop depth 1
+;;      pred:       5
+;;     starting at line -1, discriminator 2
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:57:10] a = a + 1;
+    [test.cc:55:3] j = j + 1;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:55:3] goto <bb 5>;
+;;      succ:       5
+
+*** ========================
+;;     basic block 7, loop depth 0
+;;      pred:       5
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:62:3] if (a <= 4)
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       8
+;;                  9
+
+*** ========================
+;;     basic block 8, loop depth 0
+;;      pred:       7
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:64:17] b = foo (a);
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       9
+
+*** ========================
+;;     basic block 9, loop depth 0
+;;      pred:       7
+;;                  8
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:70:3] switch (a) <[test.cc:82:5] default: <L10>, [test.cc:72:5] case 8: <L8>, [test.cc:77:5] case 12: <L9>>
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       12
+;;                  10
+;;                  11
+
+*** ========================
+;;     basic block 10, loop depth 0
+;;      pred:       9
+;;     starting at line -1
+  <L8>:
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:74:11] a = a + b;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:76:7] goto <bb 13>;
+;;      succ:       13
+
+*** ========================
+;;     basic block 11, loop depth 0
+;;      pred:       9
+;;     starting at line -1
+  <L9>:
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:79:13] a = a + 100;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:81:7] goto <bb 13>;
+;;      succ:       13
+
+*** ========================
+;;     basic block 12, loop depth 0
+;;      pred:       9
+;;     starting at line -1
+  <L10>:
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:84:11] D.3042 = b + 50;
+    [test.cc:84:14] a = D.3042 + a;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       13
+
+*** ========================
+;;     basic block 13, loop depth 0
+;;      pred:       10
+;;                  11
+;;                  12
+;;     starting at line -1
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    [test.cc:90:10] D.3034 = a;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       14
+
+*** ========================
+;;     basic block 14, loop depth 0
+;;      pred:       3
+;;                  13
+;;     starting at line -1
+  <L12>:
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+");
+    return D.3034;
+    __asm__("nop
+	nop
+	nop
+	nop
+	nop
+");
+;;      succ:       EXIT
+
+*** ========================
+;;     basic block 1, loop depth 0
+;;      pred:       14
+;; 
+;;      succ:      
+
+bool simple_plugin_t::has_arg(const char *key): entry
+bool simple_plugin_t::has_arg(const char *key): exit [true]

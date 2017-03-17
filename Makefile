@@ -12,9 +12,9 @@
 # make all check test
 ## for building plugin for host gcc
 
-GCC := gcc
-GXX := g++
-GDB := gdb
+GCC := /usr/local/gcc-5.4.0-linux-x86_64/bin/gcc
+GXX := /usr/local/gcc-5.4.0-linux-x86_64/bin/g++
+GDB := /usr/local/gcc-5.4.0-linux-x86_64/bin/gdb
 
 GXXFLAGS := -g -O0 -da -fno-asynchronous-unwind-tables -fno-dwarf2-cfi-asm
 GXXPLUGINFLAGS := -fplugin=$(shell $(GCC) -print-file-name=plugin)/simple.so
@@ -62,7 +62,7 @@ test: simple.so install
 
 debugtest: simple.so install
 	/bin/echo -ne "digraph {\n" > graph_test.dot
-	gdb -q -args /usr/lib/gcc/x86_64-linux-gnu/5.4.0/cc1 -O3 $(GXXPLUGINFLAGS) -fplugin-arg-simple-graphname=graph_test
+	gdb -q -args /usr/local/gcc-5.4.0-linux-x86_64/libexec/gcc/x86_64-unknown-linux-gnu/5.4.0/cc1 -O1 $(GXXPLUGINFLAGS) -fplugin-arg-simple-graphname=graph_test
 	/bin/echo -ne "\n}\n" >> graph_test.dot
 	dot -Tsvg -O graph_test.dot
 
