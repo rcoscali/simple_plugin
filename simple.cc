@@ -204,7 +204,10 @@ static int simple_dump_flags = dump_flags;
 
 static int simple_dump_flags =                                        \
   TDF_BLOCKS|                                                         \
+  TDF_DETAILS|                                                        \
   TDF_LINENO|                                                         \
+  TDF_ASMNAME|                                                        \
+  TDF_STMTADDR|                                                       \
   TDF_COMMENT;
 
 //  TDF_ASMNAME|                                                      
@@ -234,8 +237,22 @@ static int simple_dump_flags =                                        \
       printf("*** BASIC BLOCKS ***\n");                               \
       FOR_ALL_BB_FN(bb, cfun)                                         \
         {                                                             \
+          edge an_edge;                                               \
+          edge_iterator ei;                                           \
           printf("*** ========================\n");                   \
           dump_bb (stdout, bb, 4, simple_dump_flags);                 \
+          FOR_EACH_EDGE(an_edge, ei, bb->succs)                       \
+          {                                                           \
+            dump_edge_info(stdout, an_edge, simple_dump_flags, 0);    \
+            gimple_stmt_iterator gsi;                                 \
+            for (gsi = gsi_start (an_edge->insns.g);                  \
+                 !gsi_end_p (gsi);                                    \
+                 gsi_next (&gsi))                                     \
+            {                                                         \
+              gimple *g = gsi_stmt (gsi);                             \
+              print_gimple_stmt(stdout, g, 4, simple_dump_flags);     \
+            }                                                         \
+          }                                                           \
         }                                                             \
       if (pi->has_arg(GRAPHNAME_ARG))                                 \
         print_graph_cfg(pi->get_graphname(), cfun);                   \
@@ -282,6 +299,7 @@ on_PLUGIN_FINISH(void *gcc_data, void *user_data)
           if (bb)
             {
               gimple_seq *seq = bb_seq_addr(bb);
+              printf("***>>>============================================<<<***\n");
               printf("***>>>\t bb->flags = %d \t<<<***\n", bb->flags);
               printf("***>>>\t bb->flags & BB_RTL = %d \t<<<***\n", bb->flags & BB_RTL);
               printf("***>>>\t !(bb->flags & BB_RTL) = %d \t<<<***\n", !(bb->flags & BB_RTL));
@@ -342,39 +360,36 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
           gimple_seq *seq = bb_seq_addr(bb);
           if (seq != (gimple_seq *)NULL)
             {
-#if 1
               gimple_stmt_iterator gsi_start = gsi_start_nondebug_after_labels_bb (bb);
-              vec<tree, va_gc> *inputs1, *outputs1, *clobbers1, *labels1;
-              vec_alloc (inputs1, 0);
-              vec_alloc (outputs1, 0);
-              vec_alloc (clobbers1, 0);
-              vec_alloc (labels1, 0);
-              gasm *gimple_asm_stmt1 = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n\tnop\n",
-                                                            inputs1,
-                                                            outputs1,
-                                                            clobbers1,
-                                                            labels1);
+              gasm *gimple_asm_stmt1 = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n",
+                                                            NULL,
+                                                            NULL,
+                                                            NULL,
+                                                            NULL);
               gsi_insert_before (&gsi_start, gimple_asm_stmt1, GSI_SAME_STMT);
-#endif
 
 #if 1
-              gimple_stmt_iterator gsi_last = gsi_last_bb (bb);
-              vec<tree, va_gc> *inputs2, *outputs2, *clobbers2, *labels2;
-              vec_alloc (inputs2, 0);
-              vec_alloc (outputs2, 0);
-              vec_alloc (clobbers2, 0);
-              vec_alloc (labels2, 0);
-              gasm *gimple_asm_stmt2 = gimple_build_asm_vec("nop\n\tnop\n\tnop\n\tnop\n\tnop\n",
-                                                            inputs2,
-                                                            outputs2,
-                                                            clobbers2,
-                                                            labels2);
-              gsi_insert_after (&gsi_last, gimple_asm_stmt2, GSI_NEW_STMT);
-#else
-              for (int n_nop = 0 ; n_nop < 6; n_nop++)
-                {
-                  emit_insn_after_noloc (gen_nop (), BB_END (bb), bb);
-                }
+              edge_iterator ei;
+              edge succ_edge;
+              
+              FOR_EACH_EDGE(succ_edge, ei, bb->succs)
+              {
+                if (0 != (succ_edge->flags & EDGE_TRUE_VALUE|EDGE_FALSE_VALUE))
+                  {
+                    gimple_stmt_iterator gsi_start = gsi_start (succ_edge->insns.g);
+                    vec<tree, va_gc> *inputs2, *outputs2, *clobbers2, *labels2;
+                    vec_alloc (inputs2, 0);
+                    vec_alloc (outputs2, 0);
+                    vec_alloc (clobbers2, 0);
+                    vec_alloc (labels2, 0);
+                    gasm *gimple_asm_stmt2 = gimple_build_asm_vec("xchg eax,eax\n",
+                                                                  NULL,
+                                                                  NULL,
+                                                                  NULL,
+                                                                  NULL);
+                    gsi_insert_before (&gsi_start, gimple_asm_stmt2, GSI_SAME_STMT);
+                  }
+              }
 #endif
             }
         }
@@ -398,6 +413,7 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
               if (bb)
                 {
                   gimple_seq *seq = bb_seq_addr(bb);
+                  printf("***>>>============================================<<<***\n");
                   printf("***>>>\t bb->flags = %d \t<<<***\n", bb->flags);
                   printf("***>>>\t bb->flags & BB_RTL = %d \t<<<***\n", bb->flags & BB_RTL);
                   printf("***>>>\t !(bb->flags & BB_RTL) = %d \t<<<***\n", !(bb->flags & BB_RTL));
@@ -423,6 +439,7 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
               if (bb)
                 {
                   gimple_seq *seq = bb_seq_addr(bb);
+                  printf("***>>>============================================<<<***\n");
                   printf("***>>>\t bb->flags = %d \t<<<***\n", bb->flags);
                   printf("***>>>\t bb->flags & BB_RTL = %d \t<<<***\n", bb->flags & BB_RTL);
                   printf("***>>>\t !(bb->flags & BB_RTL) = %d \t<<<***\n", !(bb->flags & BB_RTL));
@@ -473,6 +490,7 @@ on_PLUGIN_NEW_PASS(void *gcc_data, void *user_data)
           if (bb)
             {
               gimple_seq *seq = bb_seq_addr(bb);
+              printf("***>>>============================================<<<***\n");
               printf("***>>>\t bb->flags = %d \t<<<***\n", bb->flags);
               printf("***>>>\t bb->flags & BB_RTL = %d \t<<<***\n", bb->flags & BB_RTL);
               printf("***>>>\t !(bb->flags & BB_RTL) = %d \t<<<***\n", !(bb->flags & BB_RTL));
@@ -508,6 +526,7 @@ on_PLUGIN_FINISH_UNIT(void *gcc_data, void *user_data)
           if (bb)
             {
               gimple_seq *seq = bb_seq_addr(bb);
+              printf("***>>>============================================<<<***\n");
               printf("***>>>\t bb->flags = %d \t<<<***\n", bb->flags);
               printf("***>>>\t bb->flags & BB_RTL = %d \t<<<***\n", bb->flags & BB_RTL);
               printf("***>>>\t !(bb->flags & BB_RTL) = %d \t<<<***\n", !(bb->flags & BB_RTL));
@@ -1108,7 +1127,6 @@ SimpleRTLPass_do_init(struct plugin_name_args *plugin_info,
                       size_t pass_sz)
 {
   pass_data pass_data;
-  struct opt_pass *pass;
 
   cerr << "SimpleRTLPass_do_init: entry" << endl;
   
@@ -1123,6 +1141,8 @@ SimpleRTLPass_do_init(struct plugin_name_args *plugin_info,
 #endif
 
   cerr << "SimpleRTLPass_do_init: pass_data.name = " << pass_data.name << endl;
+
+  struct opt_pass *pass;
   
   switch (pass_type)
     {
@@ -1135,7 +1155,7 @@ SimpleRTLPass_do_init(struct plugin_name_args *plugin_info,
       gcc_unreachable();
     }
 
-  //  register_pass (pass, PASS_POS_INSERT_AFTER, "post_rtl", 0);
+  //register_pass (pass, PASS_POS_INSERT_AFTER, "post_rtl", 0);
   
   register_callback (plugin_info->base_name,
                      PLUGIN_EARLY_GIMPLE_PASSES_END,
