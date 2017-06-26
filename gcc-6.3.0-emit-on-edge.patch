@@ -1,0 +1,145 @@
+diff -Naur -x '*.o' -x '*~' gcc-6.3.0-orig/gcc/cfganal.c gcc-6.3.0/gcc/cfganal.c
+--- gcc-6.3.0-orig/gcc/cfganal.c	2016-01-04 15:30:50.000000000 +0100
++++ gcc-6.3.0/gcc/cfganal.c	2017-06-25 12:31:32.831792494 +0200
+@@ -483,19 +483,22 @@
+   edge e;
+   edge_iterator ei;
+ 
+-  if (EDGE_COUNT (pred->succs) <= EDGE_COUNT (succ->preds))
++  if (pred && succ)
+     {
+-      FOR_EACH_EDGE (e, ei, pred->succs)
+-	if (e->dest == succ)
+-	  return e;
++      if (EDGE_COUNT (pred->succs) <= EDGE_COUNT (succ->preds))
++	{
++	  FOR_EACH_EDGE (e, ei, pred->succs)
++	    if (e->dest == succ)
++	      return e;
++	}
++      else
++	{
++	  FOR_EACH_EDGE (e, ei, succ->preds)
++	    if (e->src == pred)
++	      return e;
++	}
+     }
+-  else
+-    {
+-      FOR_EACH_EDGE (e, ei, succ->preds)
+-	if (e->src == pred)
+-	  return e;
+-    }
+-
++  
+   return NULL;
+ }
+ 
+diff -Naur -x '*.o' -x '*~' gcc-6.3.0-orig/gcc/cfgexpand.c gcc-6.3.0/gcc/cfgexpand.c
+--- gcc-6.3.0-orig/gcc/cfgexpand.c	2016-04-27 14:23:50.000000000 +0200
++++ gcc-6.3.0/gcc/cfgexpand.c	2017-06-25 13:05:58.045297842 +0200
+@@ -3536,6 +3536,15 @@
+       expand_label (gimple_label_label (as_a <glabel *> (stmt)));
+       break;
+     case GIMPLE_NOP:
++      {
++	location_t locus = gimple_location (stmt);
++	rtx body = gen_rtx_ASM_INPUT_loc (VOIDmode,
++					  ggc_strdup ("nop"),
++					  locus);
++	MEM_VOLATILE_P (body) = 1;
++	emit_insn (body);
++      }
++
+     case GIMPLE_PREDICT:
+       break;
+     case GIMPLE_SWITCH:
+diff -Naur -x '*.o' -x '*~' gcc-6.3.0-orig/gcc/recog.c gcc-6.3.0/gcc/recog.c
+--- gcc-6.3.0-orig/gcc/recog.c	2016-01-29 19:47:17.000000000 +0100
++++ gcc-6.3.0/gcc/recog.c	2017-06-24 01:18:11.825435382 +0200
+@@ -39,6 +39,7 @@
+ #include "cfgcleanup.h"
+ #include "reload.h"
+ #include "tree-pass.h"
++#include "print-rtl.h"
+ 
+ #ifndef STACK_POP_CODE
+ #if STACK_GROWS_DOWNWARD
+@@ -2282,24 +2283,32 @@
+       /* Ordinary insn: recognize it, get the operands via insn_extract
+ 	 and get the constraints.  */
+ 
+-      icode = recog_memoized (insn);
+-      if (icode < 0)
+-	fatal_insn_not_found (insn);
+-
+-      recog_data.n_operands = noperands = insn_data[icode].n_operands;
+-      recog_data.n_alternatives = insn_data[icode].n_alternatives;
+-      recog_data.n_dups = insn_data[icode].n_dups;
+-
+-      insn_extract (insn);
+-
+-      for (i = 0; i < noperands; i++)
++      if (insn)
+ 	{
+-	  recog_data.constraints[i] = insn_data[icode].operand[i].constraint;
+-	  recog_data.is_operator[i] = insn_data[icode].operand[i].is_operator;
+-	  recog_data.operand_mode[i] = insn_data[icode].operand[i].mode;
+-	  /* VOIDmode match_operands gets mode from their real operand.  */
+-	  if (recog_data.operand_mode[i] == VOIDmode)
+-	    recog_data.operand_mode[i] = GET_MODE (recog_data.operand[i]);
++	  icode = recog_memoized (insn);
++	  if (icode < 0)
++	    {
++	      fprintf(stderr, "*** debug insn\n");
++	      dump_insn_slim(stderr, insn);
++	      fprintf(stderr, "*** endof debug insn\n");
++	      fatal_insn_not_found (insn);
++	    }
++	  
++	  recog_data.n_operands = noperands = insn_data[icode].n_operands;
++	  recog_data.n_alternatives = insn_data[icode].n_alternatives;
++	  recog_data.n_dups = insn_data[icode].n_dups;
++	  
++	  insn_extract (insn);
++	  
++	  for (i = 0; i < noperands; i++)
++	    {
++	      recog_data.constraints[i] = insn_data[icode].operand[i].constraint;
++	      recog_data.is_operator[i] = insn_data[icode].operand[i].is_operator;
++	      recog_data.operand_mode[i] = insn_data[icode].operand[i].mode;
++	      /* VOIDmode match_operands gets mode from their real operand.  */
++	      if (recog_data.operand_mode[i] == VOIDmode)
++		recog_data.operand_mode[i] = GET_MODE (recog_data.operand[i]);
++	    }
+ 	}
+     }
+   for (i = 0; i < noperands; i++)
+diff -Naur -x '*.o' -x '*~' gcc-6.3.0-orig/gcc/stmt.c gcc-6.3.0/gcc/stmt.c
+--- gcc-6.3.0-orig/gcc/stmt.c	2016-01-29 19:47:17.000000000 +0100
++++ gcc-6.3.0/gcc/stmt.c	2017-06-25 12:42:08.021322934 +0200
+@@ -1100,7 +1100,8 @@
+       tree lab = CASE_LABEL (elt);
+       basic_block case_bb = label_to_block_fn (cfun, lab);
+       edge case_edge = find_edge (bb, case_bb);
+-      case_edge->aux = (void *)((intptr_t)(case_edge->aux) + 1);
++      if (case_edge)
++	case_edge->aux = (void *)((intptr_t)(case_edge->aux) + 1);
+     }
+ }
+ 
+@@ -1207,10 +1208,10 @@
+ 
+       basic_block case_bb = label_to_block_fn (cfun, lab);
+       edge case_edge = find_edge (bb, case_bb);
+-      case_list = add_case_node (
+-          case_list, low, high, lab,
+-          case_edge->probability / (intptr_t)(case_edge->aux),
+-          case_node_pool);
++      if (case_edge)
++	case_list = add_case_node (case_list, low, high, lab,
++				   case_edge->probability / (intptr_t)(case_edge->aux),
++				   case_node_pool);
+     }
+   reset_out_edges_aux (bb);
+ 
