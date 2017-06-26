@@ -37,6 +37,12 @@
 #include "gimple-iterator.h"
 #include "df.h"
 
+#ifdef USE_GCC_6
+typedef gimple *mygimple;
+#else
+typedef gimple mygimple;
+#endif
+
 using namespace std;
 
 int plugin_is_GPL_compatible = 1;
@@ -96,7 +102,7 @@ public:
 
   bool gate (function *);
   unsigned int execute (function *);
-  opt_pass *clone(void);
+  struct opt_pass *clone(void);
 };
 
 SimpleGimplePass::SimpleGimplePass(const pass_data& data,
@@ -117,7 +123,7 @@ SimpleGimplePass::execute(function *fun)
   return 0;
 }
 
-opt_pass *
+struct opt_pass *
 SimpleGimplePass::clone()
 {
   return this;
@@ -133,7 +139,7 @@ public:
 
   bool gate (function *);
   unsigned int execute (function *);
-  opt_pass *clone(void);
+  struct opt_pass *clone(void);
 };
 
 SimpleRTLPass::SimpleRTLPass(const pass_data& data,
@@ -154,7 +160,7 @@ SimpleRTLPass::execute(function *fun)
   return 0;
 }
 
-opt_pass *
+struct opt_pass *
 SimpleRTLPass::clone()
 {
   return this;
@@ -249,7 +255,7 @@ static int simple_dump_flags =                                        \
                  !gsi_end_p (gsi);                                    \
                  gsi_next (&gsi))                                     \
             {                                                         \
-              gimple *g = gsi_stmt (gsi);                             \
+              mygimple g = gsi_stmt (gsi);                            \
               print_gimple_stmt(stdout, g, 4, simple_dump_flags);     \
             }                                                         \
           }                                                           \
@@ -328,7 +334,7 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
   if (pi)
     printf("    Current delta = %d\n", pi->get_current_delta());
 
-  opt_pass *pass = (opt_pass *)gcc_data;
+  struct opt_pass *pass = (struct opt_pass *)gcc_data;
   printf("pass name = %s\n", pass->name);
   printf("pass index = %d\n", pass->static_pass_number);
   
@@ -341,6 +347,9 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
     {
       printf("    cfun->cfg->x_entry_block_ptr->next_bb = %p\n", cfun->cfg->x_entry_block_ptr->next_bb);  
       printf("    cfun->cfg->x_entry_block_ptr->prev_bb = %p\n", cfun->cfg->x_entry_block_ptr->prev_bb);
+      printf("decl: ");
+      debug_generic_stmt (cfun->decl);
+      printf("\n");
     }
 
   if (!memcmp(pass->name , "gimple", 7))
@@ -368,7 +377,7 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
                                                             NULL);
               gsi_insert_before (&gsi_start, gimple_asm_stmt1, GSI_SAME_STMT);
 
-#if 1
+#if ADD_CODE_ON_EDGE
               edge_iterator ei;
               edge succ_edge;
               
@@ -376,21 +385,41 @@ on_PLUGIN_PASS_EXECUTION(void *gcc_data, void *user_data)
               {
                 if (0 != (succ_edge->flags & EDGE_TRUE_VALUE|EDGE_FALSE_VALUE))
                   {
-                    gimple_stmt_iterator gsi_start = gsi_start (succ_edge->insns.g);
+                    gimple_stmt_iterator gsi_start = gsi_start_edge (succ_edge);
+#ifdef ADD_GIMPLE_ASM_ON_EDGE
                     vec<tree, va_gc> *inputs2, *outputs2, *clobbers2, *labels2;
                     vec_alloc (inputs2, 0);
                     vec_alloc (outputs2, 0);
                     vec_alloc (clobbers2, 0);
                     vec_alloc (labels2, 0);
-                    gasm *gimple_asm_stmt2 = gimple_build_asm_vec("xchg eax,eax\n",
-                                                                  NULL,
-                                                                  NULL,
-                                                                  NULL,
-                                                                  NULL);
-                    gsi_insert_before (&gsi_start, gimple_asm_stmt2, GSI_SAME_STMT);
+                    gasm *gimple_nop = gimple_build_asm_vec("xchg __tmp_reg__,__tmp_reg__\n",
+                                                            NULL,
+                                                            NULL,
+                                                            NULL,
+                                                            NULL);
+                    gimple_nop->has_volatile_ops = 1;
+                    gimple_nop->num_ops = 0;
+                    gimple_nop->bb = bb;
+#elif ADD_GIMPLE_NOP_ON_EDGE
+                    gimple gimple_nop = gimple_build_nop();
+                    gimple_nop->has_volatile_ops = 1;
+                    gimple_nop->num_ops = 0;
+                    gimple_nop->bb = bb;
+#endif /* !(ADD_GIMPLE_ASM_ON_EDGE|ADD_GIMPLE_NOP_ON_EDGE) */
+                    gsi_insert_before (&gsi_start, gimple_nop, GSI_SAME_STMT);
                   }
               }
-#endif
+#else /* !ADD_CODE_ON_EDGE */
+#ifdef ADD_GIMPLE_ASM_ON_BB
+#elif ADD_GIMPLE_NOP_ON_BB
+              gimple_stmt_iterator gsi_last = gsi_last_bb (bb);
+              gimple *gimple_nop = gimple_build_nop();
+              gsi_insert_after (&gsi_last, gimple_nop, GSI_SAME_STMT);              
+              // gimple_nop->has_volatile_ops = 1;
+              // gimple_nop->num_ops = 0;
+              // gimple_nop->bb = bb;
+#endif /* !(ADD_GIMPLE_ASM_ON_BB|ADD_GIMPLE_NOP_ON_BB) */
+#endif /* !ADD_CODE_ON_EDGE */
             }
         }
 
@@ -467,7 +496,7 @@ on_PLUGIN_NEW_PASS(void *gcc_data, void *user_data)
   if (pi)
     printf("    Current delta = %d\n", pi->get_current_delta());
 
-  opt_pass *pass = (opt_pass *)gcc_data;
+  struct opt_pass *pass = (struct opt_pass *)gcc_data;
   printf("pass name = %s\n", pass->name);
   printf("pass index = %d\n", pass->static_pass_number);  
 

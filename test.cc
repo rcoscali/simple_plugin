@@ -23,8 +23,8 @@ foo(int a)
 int
 t2(int a)
 {
-  asm("nop\n"::);
-  return a+1;
+  asm("nop");
+  return a+2;
 }
 
 int
@@ -34,6 +34,7 @@ t3(int a)
     {
       printf("i = %d\n", i);
     }
+  return a+3;
 }
 
 int
@@ -43,6 +44,7 @@ t1(int a)
     t2(a);
   else
     t3(a);
+  return a+1;
 }
 
 int
@@ -68,17 +70,17 @@ main(int argc, char **argv)
       b = foo(a);
     }
 
-  switch (a)
-    {
-    case 8:
-      a+=b;
-      break;
-    case 12:
-      a+=100;
-      break;
-    default:
-      a+=b+50;
-    }
+  // switch (a)
+  //   {
+  //   case 8:
+  //     a+=b;
+  //     break;
+  //   case 12:
+  //     a+=100;
+  //     break;
+  //   default:
+  //     a+=b+50;
+  //   }
 
   return a;
 }
